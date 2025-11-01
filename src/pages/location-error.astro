@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { icons } from '../components/icons';
+---
+
+<Layout title="Workspresso - Location Required">
+	<div class="min-h-screen bg-neutral-950 text-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
+		<div class="absolute inset-0">
+			<div class="absolute top-20 left-10 w-72 h-72 bg-red-500/10 rounded-full blur-3xl animate-pulse"></div>
+			<div class="absolute bottom-20 right-10 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
+		</div>
+
+		<div class="relative text-center max-w-md">
+			<div class="mb-8 inline-block">
+				<div class="w-24 h-24 border-4 border-red-500 border-dashed rounded-full flex items-center justify-center animate-spin-slow">
+					<div class="w-12 h-12 text-red-400">
+						<Fragment set:html={icons.mapPin} />
+					</div>
+				</div>
+			</div>
+
+			<h2 class="text-4xl font-black mb-4">Location Required</h2>
+			<p class="text-xl text-gray-400 mb-12">
+				Enable location services to discover work-friendly spots near you.
+			</p>
+
+			<a href="/" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 text-white py-4 px-6 font-bold mb-4 border-b-4 border-orange-700 hover:from-amber-600 hover:to-orange-700 transition-all">
+				ENABLE LOCATION
+			</a>
+			<a href="/about" class="text-gray-400 text-sm underline hover:text-gray-300">
+				Learn More
+			</a>
+		</div>
+	</div>
+</Layout>
