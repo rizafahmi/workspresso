@@ -1,0 +1,232 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ScoreCircle from '../../components/ScoreCircle.astro';
+import { venues } from '../../data/venues';
+import { icons } from '../../components/icons';
+
+export function getStaticPaths() {
+	return venues.map((venue) => ({
+		params: { id: venue.id.toString() },
+		props: { venue },
+	}));
+}
+
+const { venue } = Astro.props;
+---
+
+<Layout title={`Workspresso - ${venue.name}`}>
+	<div class="min-h-screen bg-neutral-50">
+		<div class="bg-neutral-950 text-white relative border-b-8 border-amber-500">
+			<div class="p-6">
+				<a href="/" class="flex items-center text-white mb-6 hover:text-amber-400 transition-colors font-bold text-sm">
+					<div class="w-5 h-5">
+						<Fragment set:html={icons.chevronLeft} />
+					</div>
+					BACK TO LIST
+				</a>
+
+				<div class="flex justify-between items-start mb-6">
+					<div class="flex-1">
+						<div class="inline-block bg-amber-500 text-neutral-900 px-3 py-1 text-xs font-black mb-3">
+							{venue.distance.toUpperCase()}
+						</div>
+						<h1 class="text-3xl font-black mb-2 leading-tight">
+							{venue.name}
+						</h1>
+						<div class="text-sm text-gray-400 font-mono">
+							{venue.vibe}
+						</div>
+					</div>
+				</div>
+
+				<div class="flex justify-between items-center gap-4 pb-6">
+					<div class="text-center">
+						<ScoreCircle score={venue.wifiScore} />
+						<div class="text-xs font-bold mt-2">WI-FI</div>
+					</div>
+					<div class="text-center">
+						<ScoreCircle score={venue.powerScore} />
+						<div class="text-xs font-bold mt-2">POWER</div>
+					</div>
+					<div class="text-center">
+						<ScoreCircle score={venue.noiseScore} />
+						<div class="text-xs font-bold mt-2">NOISE</div>
+					</div>
+					<div class="text-center">
+						<ScoreCircle score={venue.seatingScore} />
+						<div class="text-xs font-bold mt-2">SPACE</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="p-4 space-y-4">
+			<div class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+				<div class="bg-neutral-900 text-white px-4 py-3">
+					<h2 class="font-black text-sm">WORK ENVIRONMENT</h2>
+				</div>
+				<div class="p-5 space-y-4">
+					<div class="flex items-start gap-4 pb-4 border-b-2 border-neutral-200">
+						<div class="w-12 h-12 bg-emerald-100 flex items-center justify-center border-2 border-neutral-900">
+							<div class="w-6 h-6 text-emerald-700">
+								<Fragment set:html={icons.wifi} />
+							</div>
+						</div>
+						<div class="flex-1">
+							<div class="text-xs font-bold text-neutral-500 mb-1">
+								WI-FI RELIABILITY
+							</div>
+							<div class="text-lg font-black text-neutral-900">
+								{venue.wifi}
+							</div>
+						</div>
+					</div>
+
+					<div class="flex items-start gap-4 pb-4 border-b-2 border-neutral-200">
+						<div class="w-12 h-12 bg-amber-100 flex items-center justify-center border-2 border-neutral-900">
+							<div class="w-6 h-6 text-amber-700">
+								<Fragment set:html={icons.zap} />
+							</div>
+						</div>
+						<div class="flex-1">
+							<div class="text-xs font-bold text-neutral-500 mb-1">
+								POWER OUTLETS
+							</div>
+							<div class="text-lg font-black text-neutral-900">
+								{venue.power}
+							</div>
+						</div>
+					</div>
+
+					<div class="flex items-start gap-4 pb-4 border-b-2 border-neutral-200">
+						<div class="w-12 h-12 bg-violet-100 flex items-center justify-center border-2 border-neutral-900">
+							<div class="w-6 h-6 text-violet-700">
+								<Fragment set:html={icons.volume2} />
+							</div>
+						</div>
+						<div class="flex-1">
+							<div class="text-xs font-bold text-neutral-500 mb-1">
+								NOISE LEVEL
+							</div>
+							<div class="text-lg font-black text-neutral-900">
+								{venue.noise}
+							</div>
+						</div>
+					</div>
+
+					<div class="flex items-start gap-4">
+						<div class="w-12 h-12 bg-blue-100 flex items-center justify-center border-2 border-neutral-900">
+							<div class="w-6 h-6 text-blue-700">
+								<Fragment set:html={icons.users} />
+							</div>
+						</div>
+						<div class="flex-1">
+							<div class="text-xs font-bold text-neutral-500 mb-1">
+								SEATING & SPACE
+							</div>
+							<div class="text-lg font-black text-neutral-900">
+								{venue.seating}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+				<div class="bg-neutral-900 text-white px-4 py-3">
+					<h2 class="font-black text-sm">LOCATION</h2>
+				</div>
+				<div class="p-5 space-y-4">
+					<div>
+						<div class="text-xs font-bold text-neutral-500 mb-1">
+							ADDRESS
+						</div>
+						<div class="font-bold text-neutral-900">
+							{venue.address}
+						</div>
+					</div>
+					<div>
+						<div class="text-xs font-bold text-neutral-500 mb-1">
+							HOURS
+						</div>
+						<div class="font-bold text-neutral-900 font-mono">
+							{venue.hours}
+						</div>
+					</div>
+					<button class="w-full bg-amber-500 text-neutral-900 py-4 font-black border-4 border-neutral-900 hover:bg-amber-400 transition-colors flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1">
+						<div class="w-5 h-5">
+							<Fragment set:html={icons.navigation} />
+						</div>
+						GET DIRECTIONS
+					</button>
+				</div>
+			</div>
+
+			<div id="feedback-section" class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+				<div class="bg-neutral-900 text-white px-4 py-3">
+					<h2 class="font-black text-sm">DATA VERIFICATION</h2>
+				</div>
+				<div class="p-5">
+					<p class="font-bold text-neutral-900 mb-4">
+						Was this info accurate?
+					</p>
+					<div class="grid grid-cols-2 gap-3">
+						<button
+							id="feedback-yes"
+							class="bg-emerald-500 text-white py-4 font-black border-4 border-neutral-900 hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
+						>
+							<div class="w-5 h-5">
+								<Fragment set:html={icons.thumbsUp} />
+							</div>
+							YES
+						</button>
+						<button
+							id="feedback-no"
+							class="bg-rose-500 text-white py-4 font-black border-4 border-neutral-900 hover:bg-rose-400 transition-colors flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
+						>
+							<div class="w-5 h-5">
+								<Fragment set:html={icons.thumbsDown} />
+							</div>
+							NO
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div id="feedback-received" class="hidden bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center">
+				<div id="feedback-icon" class="w-20 h-20 border-4 border-neutral-900 mx-auto flex items-center justify-center mb-4">
+				</div>
+				<p class="font-black text-xl text-neutral-900 mb-2">
+					FEEDBACK RECEIVED
+				</p>
+				<p class="text-neutral-600 font-mono text-sm">
+					Thanks for helping us improve
+				</p>
+			</div>
+		</div>
+	</div>
+</Layout>
+
+<script>
+	const feedbackYes = document.getElementById('feedback-yes');
+	const feedbackNo = document.getElementById('feedback-no');
+	const feedbackSection = document.getElementById('feedback-section');
+	const feedbackReceived = document.getElementById('feedback-received');
+	const feedbackIcon = document.getElementById('feedback-icon');
+
+	function handleFeedback(isPositive: boolean) {
+		feedbackSection?.classList.add('hidden');
+		feedbackReceived?.classList.remove('hidden');
+		
+		if (isPositive) {
+			feedbackIcon?.classList.add('bg-emerald-500');
+			feedbackIcon!.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>';
+		} else {
+			feedbackIcon?.classList.add('bg-rose-500');
+			feedbackIcon!.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>';
+		}
+	}
+
+	feedbackYes?.addEventListener('click', () => handleFeedback(true));
+	feedbackNo?.addEventListener('click', () => handleFeedback(false));
+</script>

@@ -1,0 +1,45 @@
+---
+interface Props {
+	score: number;
+	size?: 'md' | 'lg';
+}
+
+const { score, size = 'md' } = Astro.props;
+
+const radius = size === 'lg' ? 54 : 36;
+const circumference = 2 * Math.PI * radius;
+const percentage = (score / 5) * 100;
+const offset = circumference - (percentage / 100) * circumference;
+
+const colorClass = score >= 4 ? 'stroke-emerald-500' : score >= 3 ? 'stroke-amber-500' : 'stroke-rose-500';
+const dimensions = size === 'lg' ? 'w-32 h-32' : 'w-20 h-20';
+---
+
+<div class={`${dimensions} relative`}>
+	<svg class="transform -rotate-90" viewBox="0 0 120 120">
+		<circle
+			cx="60"
+			cy="60"
+			r={radius}
+			stroke="currentColor"
+			stroke-width="8"
+			fill="none"
+			class="text-gray-200"
+		/>
+		<circle
+			cx="60"
+			cy="60"
+			r={radius}
+			stroke="currentColor"
+			stroke-width="8"
+			fill="none"
+			stroke-dasharray={circumference}
+			stroke-dashoffset={offset}
+			class={`${colorClass} transition-all duration-1000`}
+			stroke-linecap="round"
+		/>
+	</svg>
+	<div class="absolute inset-0 flex items-center justify-center">
+		<span class="text-2xl font-black text-gray-900">{score}</span>
+	</div>
+</div>
