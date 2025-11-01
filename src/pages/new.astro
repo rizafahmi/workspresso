@@ -1,0 +1,240 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { icons } from "../components/icons";
+
+const formData = {
+    name: "",
+    address: "",
+    hours: "",
+    wifiScore: 3,
+    powerScore: 3,
+    noiseScore: 3,
+    seatingScore: 3,
+};
+---
+
+<Layout title="Workspresso - Add New Venue">
+    <div class="min-h-screen bg-neutral-50">
+        <div class="bg-neutral-950 text-white p-6 border-b-8 border-amber-500">
+            <a
+                href="/"
+                class="flex items-center text-white mb-4 hover:text-amber-400 transition-colors font-bold text-sm"
+            >
+                <span class="w-5 h-5" set:html={icons.chevronLeft} />
+                BACK
+            </a>
+            <h1 class="text-3xl font-black tracking-tight mb-2">
+                ADD NEW VENUE
+            </h1>
+            <p class="text-gray-400 text-sm">
+                Help others find great work spots
+            </p>
+        </div>
+
+        <form method="POST" action="/submit-venue" class="p-4 space-y-4">
+            <!-- Basic Info Card -->
+            <div
+                class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden"
+            >
+                <div class="bg-neutral-900 text-white px-4 py-3">
+                    <h2 class="font-black text-sm">BASIC INFORMATION</h2>
+                </div>
+                <div class="p-5 space-y-4">
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-neutral-500 mb-2"
+                        >
+                            VENUE NAME *
+                        </label>
+                        <input
+                            type="text"
+                            name="name"
+                            required
+                            placeholder="e.g., The Daily Grind"
+                            class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-amber-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-neutral-500 mb-2"
+                        >
+                            ADDRESS *
+                        </label>
+                        <input
+                            type="text"
+                            name="address"
+                            required
+                            placeholder="123 Main Street, City"
+                            class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-amber-500"
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-neutral-500 mb-2"
+                        >
+                            HOURS *
+                        </label>
+                        <input
+                            type="text"
+                            name="hours"
+                            required
+                            placeholder="e.g., 7:00 AM - 9:00 PM"
+                            class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 font-mono placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-amber-500"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Work Environment Ratings -->
+            <div
+                class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden"
+            >
+                <div class="bg-neutral-900 text-white px-4 py-3">
+                    <h2 class="font-black text-sm">WORK ENVIRONMENT RATINGS</h2>
+                </div>
+                <div class="p-5 space-y-6">
+                    <!-- Wi-Fi Rating -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-10 h-10 bg-emerald-100 flex items-center justify-center border-2 border-neutral-900"
+                            >
+                                <span
+                                    set:html={icons.wifi}
+                                    class="w-5 h5 text-emerald-700"
+                                />
+                            </div>
+                            <div class="flex-1">
+                                <label
+                                    class="block text-xs font-bold text-neutral-500 mb-1"
+                                >
+                                    WI-FI RELIABILITY
+                                </label>
+                                <div
+                                    class="text-lg font-black text-neutral-900"
+                                >
+                                    3/5
+                                </div>
+                            </div>
+                        </div>
+                        <input
+                            type="range"
+                            name="wifiScore"
+                            min="1"
+                            max="5"
+                            value="3"
+                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer accent-emerald-600"
+                            style="background: linear-gradient(to right, rgb(5 150 105) 0%, rgb(5 150 105) 60%, rgb(229 229 229) 60%, rgb(229 229 229) 100%);"
+                        />
+                        <div
+                            class="flex justify-between text-xs text-neutral-500 mt-1 font-mono"
+                        >
+                            <span>Unreliable</span>
+                            <span>Perfect</span>
+                        </div>
+                    </div>
+
+                    <!-- Power Outlets Rating -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-10 h-10 bg-amber-100 flex items-center justify-center border-2 border-neutral-900"
+                            >
+                                <span
+                                    set:html={icons.zap}
+                                    class="w-5 h5 text-amber-700"
+                                />
+                            </div>
+                            <div class="flex-1">
+                                <label
+                                    class="block text-xs font-bold text-neutral-500 mb-1"
+                                >
+                                    POWER OUTLETS
+                                </label>
+                                <div
+                                    class="text-lg font-black text-neutral-900"
+                                >
+                                    3/5
+                                </div>
+                            </div>
+                        </div>
+                        <input
+                            type="range"
+                            name="powerScore"
+                            min="1"
+                            max="5"
+                            value="3"
+                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer"
+                            style="background: linear-gradient(to right, rgb(217 119 6) 0%, rgb(217 119 6) 60%, rgb(229 229 229) 60%, rgb(229 229 229) 100%);"
+                        />
+                        <div
+                            class="flex justify-between text-xs text-neutral-500 mt-1 font-mono"
+                        >
+                            <span>Rare</span>
+                            <span>Plentiful</span>
+                        </div>
+                    </div>
+
+                    <!-- Noise Level Rating -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-10 h-10 bg-violet-100 flex items-center justify-center border-2 border-neutral-900"
+                            >
+                                <span
+                                    set:html={icons.volume2}
+                                    class="w-5 h5 text-violet-700"
+                                />
+                            </div>
+                            <div class="flex-1">
+                                <label
+                                    class="block text-xs font-bold text-neutral-500 mb-1"
+                                >
+                                    NOISE LEVEL
+                                </label>
+                                <div
+                                    class="text-lg font-black text-neutral-900"
+                                >
+                                    3/5
+                                </div>
+                            </div>
+                        </div>
+                        <input
+                            type="range"
+                            name="noiseScore"
+                            min="1"
+                            max="5"
+                            value="3"
+                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer"
+                            style="background: linear-gradient(to right, rgb(124 58 237) 0%, rgb(124 58 237) 60%, rgb(229 229 229) 60%, rgb(229 229 229) 100%);"
+                        />
+                        <div
+                            class="flex justify-between text-xs text-neutral-500 mt-1 font-mono"
+                        >
+                            <span>Loud</span>
+                            <span>Quiet</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div
+                class="bg-amber-100 border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-5"
+            >
+                <p class="text-sm text-neutral-700 mb-4 font-medium">
+                    By submitting, you're helping remote workers find great
+                    places to be productive. Thank you! 🙌
+                </p>
+                <button
+                    type="submit"
+                    class="w-full bg-amber-500 text-neutral-900 py-4 font-black border-4 border-neutral-900 hover:bg-amber-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
+                >
+                    SUBMIT VENUE
+                </button>
+            </div>
+        </form>
+    </div>
+</Layout>
