@@ -1,16 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { icons } from "../components/icons";
-
-const formData = {
-    name: "",
-    address: "",
-    hours: "",
-    wifiScore: 3,
-    powerScore: 3,
-    noiseScore: 3,
-    seatingScore: 3,
-};
+import { actions } from "astro:actions";
 ---
 
 <Layout title="Workspresso - Add New Venue">
@@ -31,7 +22,7 @@ const formData = {
             </p>
         </div>
 
-        <form method="POST" action="/submit-venue" class="p-4 space-y-4">
+        <form method="POST" action={actions.saveVenue} class="p-4 space-y-4">
             <!-- Basic Info Card -->
             <div
                 class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden"
