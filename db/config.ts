@@ -4,7 +4,7 @@ const Venue = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
     name: column.text(),
-    grade: column.text(),
+    grade: column.text({ default: "-" }),
     wifiScore: column.number(),
     powerScore: column.number(),
     noiseScore: column.number(),
@@ -13,7 +13,7 @@ const Venue = defineTable({
     url: column.text({ optional: true }),
     hours: column.text(),
     vibe: column.text({ optional: true }),
-    color: column.text({ enum: ["emerald", "amber", "violet", "orange"] }),
+    color: column.text({ enum: ["emerald", "amber", "violet", "orange"], default: "emerald" }),
     created_at: column.date({ default: NOW }),
   },
 });
