@@ -18,7 +18,18 @@ const Venue = defineTable({
   },
 });
 
+const Comment = defineTable({
+  columns: {
+    id: column.number({ primaryKey: true }),
+    venueId: column.number({ references: () => Venue.columns.id }),
+    userName: column.text(),
+    comment: column.text(),
+    rating: column.number({ optional: true }),
+    created_at: column.date({ default: NOW }),
+  },
+});
+
 // https://astro.build/db/config
 export default defineDb({
-  tables: { Venue },
+  tables: { Venue, Comment },
 });

@@ -1,11 +1,11 @@
 ---
-import { db, eq, Venue } from "astro:db";
+import { db, eq, Venue, Comment, desc } from "astro:db";
 import Layout from "../../layouts/Layout.astro";
 import ScoreCircle from "../../components/ScoreCircle.astro";
 import { icons } from "../../components/icons";
 
 const { id } = Astro.params;
-// const venue = venues.find((venue) => venue.id.toString() === id);
+
 const venue = await db
     .select()
     .from(Venue)
@@ -18,6 +18,13 @@ if (!venue) {
         body: "Venue not found",
     };
 }
+
+// Fetch comments for this venue
+const comments = await db
+    .select()
+    .from(Comment)
+    .where(eq(Comment.venueId, Number(id)))
+    .orderBy(desc(Comment.created_at));
 ---
 
 <Layout title={`Workspresso - ${venue.name}`}>
@@ -248,6 +255,90 @@ if (!venue) {
                     Thanks for helping us improve
                 </p>
             </div>
+
+            <!-- User Comments Section -->
+            <div
+                class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden"
+            >
+                <div class="bg-neutral-900 text-white px-4 py-3">
+                    <h2 class="font-black text-sm">USER TESTIMONIALS</h2>
+                </div>
+                <div class="p-5">
+                    <!-- Comment Form -->
+                    <form id="comment-form" class="mb-6 pb-6 border-b-2 border-neutral-200">
+                        <h3 class="font-black text-neutral-900 mb-4">SHARE YOUR EXPERIENCE</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label for="userName" class="block text-xs font-bold text-neutral-500 mb-1">
+                                    YOUR NAME
+                                </label>
+                                <input
+                                    type="text"
+                                    id="userName"
+                                    name="userName"
+                                    required
+                                    class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 focus:outline-none focus:border-amber-500"
+                                    placeholder="Enter your name"
+                                />
+                            </div>
+                            <div>
+                                <label for="comment" class="block text-xs font-bold text-neutral-500 mb-1">
+                                    YOUR COMMENT
+                                </label>
+                                <textarea
+                                    id="comment"
+                                    name="comment"
+                                    required
+                                    rows="4"
+                                    class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 focus:outline-none focus:border-amber-500 resize-none"
+                                    placeholder="Tell us about your experience..."
+                                ></textarea>
+                            </div>
+                            <button
+                                type="submit"
+                                class="w-full bg-amber-500 text-neutral-900 py-4 font-black border-4 border-neutral-900 hover:bg-amber-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
+                            >
+                                POST COMMENT
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Success Message -->
+                    <div id="comment-success" class="hidden mb-6 p-4 bg-emerald-100 border-4 border-emerald-700">
+                        <p class="font-black text-emerald-900">✓ Comment posted successfully!</p>
+                    </div>
+
+                    <!-- Comments List -->
+                    <div>
+                        <h3 class="font-black text-neutral-900 mb-4">
+                            COMMENTS ({comments.length})
+                        </h3>
+                        {comments.length === 0 ? (
+                            <div class="text-center py-8 text-neutral-500 font-mono">
+                                No comments yet. Be the first to share your experience!
+                            </div>
+                        ) : (
+                            <div class="space-y-4">
+                                {comments.map((comment) => (
+                                    <div class="border-4 border-neutral-200 p-4">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <div class="font-black text-neutral-900">
+                                                {comment.userName}
+                                            </div>
+                                            <div class="text-xs text-neutral-500 font-mono">
+                                                {new Date(comment.created_at).toLocaleDateString()}
+                                            </div>
+                                        </div>
+                                        <p class="text-neutral-700">
+                                            {comment.comment}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </Layout>
@@ -276,4 +367,46 @@ if (!venue) {
 
     feedbackYes?.addEventListener("click", () => handleFeedback(true));
     feedbackNo?.addEventListener("click", () => handleFeedback(false));
+
+    // Handle comment form submission
+    const commentForm = document.getElementById("comment-form") as HTMLFormElement;
+    const commentSuccess = document.getElementById("comment-success");
+
+    commentForm?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(commentForm);
+        const userName = formData.get("userName") as string;
+        const comment = formData.get("comment") as string;
+        const venueId = window.location.pathname.split("/").pop();
+
+        try {
+            const response = await fetch("/api/comments", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    venueId: Number(venueId),
+                    userName,
+                    comment,
+                }),
+            });
+
+            if (response.ok) {
+                commentSuccess?.classList.remove("hidden");
+                commentForm.reset();
+                
+                // Reload page after 1.5 seconds to show new comment
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                alert("Failed to post comment. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error posting comment:", error);
+            alert("An error occurred. Please try again.");
+        }
+    });
 </script>
