@@ -1,11 +1,16 @@
 ---
+import { db, eq, Venue } from "astro:db";
 import Layout from "../../layouts/Layout.astro";
 import ScoreCircle from "../../components/ScoreCircle.astro";
-import { venues } from "../../data/venues";
 import { icons } from "../../components/icons";
 
 const { id } = Astro.params;
-const venue = venues.find((venue) => venue.id.toString() === id);
+// const venue = venues.find((venue) => venue.id.toString() === id);
+const venue = await db
+    .select()
+    .from(Venue)
+    .where(eq(Venue.id, Number(id)))
+    .get();
 
 if (!venue) {
     return {
@@ -33,11 +38,6 @@ if (!venue) {
 
                 <div class="flex justify-between items-start mb-6">
                     <div class="flex-1">
-                        <div
-                            class="inline-block bg-amber-500 text-neutral-900 px-3 py-1 text-xs font-black mb-3"
-                        >
-                            {venue.distance.toUpperCase()}
-                        </div>
                         <h1 class="text-3xl font-black mb-2 leading-tight">
                             {venue.name}
                         </h1>

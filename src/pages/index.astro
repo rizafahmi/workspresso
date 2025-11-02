@@ -1,7 +1,9 @@
 ---
+import { db, Venue } from "astro:db";
 import Layout from "../layouts/Layout.astro";
-import { venues } from "../data/venues";
 import { icons } from "../components/icons";
+
+const venues = await db.select().from(Venue);
 ---
 
 <Layout title="Workspresso - Find Your Workspace">
@@ -56,9 +58,6 @@ import { icons } from "../components/icons";
                         <div class="p-5">
                             <div class="flex justify-between items-start mb-4">
                                 <div class="flex-1">
-                                    <div class="inline-block bg-neutral-900 text-white px-3 py-1 text-xs font-bold mb-2">
-                                        {venue.distance.toUpperCase()}
-                                    </div>
                                     <h3 class="text-2xl font-black text-neutral-900 mb-1 leading-tight">
                                         {venue.name}
                                     </h3>
