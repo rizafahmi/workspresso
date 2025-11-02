@@ -2,6 +2,9 @@
 import Layout from "../layouts/Layout.astro";
 import { icons } from "../components/icons";
 import { db, Venue } from "astro:db";
+import { generate } from "../ai.ts";
+
+const message = "Help others find great work spots";
 
 if (Astro.request.method === "POST") {
     const formData = await Astro.request.formData();
@@ -44,7 +47,7 @@ if (Astro.request.method === "POST") {
                 ADD NEW VENUE
             </h1>
             <p class="text-gray-400 text-sm">
-                Help others find great work spots
+                {message}
             </p>
         </div>
 
@@ -97,7 +100,7 @@ if (Astro.request.method === "POST") {
                             type="text"
                             name="hours"
                             required
-                            placeholder="e.g., 7:00 AM - 9:00 PM"
+                            placeholder="e.g., 07:00 - 09:00"
                             class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 font-mono placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-amber-500"
                         />
                     </div>
@@ -129,11 +132,6 @@ if (Astro.request.method === "POST") {
                                 >
                                     WI-FI RELIABILITY
                                 </label>
-                                <div
-                                    class="text-lg font-black text-neutral-900"
-                                >
-                                    3/5
-                                </div>
                             </div>
                         </div>
                         <input
@@ -143,7 +141,7 @@ if (Astro.request.method === "POST") {
                             max="5"
                             value="3"
                             class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer accent-emerald-600"
-                            style="background: linear-gradient(to right, rgb(5 150 105) 0%, rgb(5 150 105) 60%, rgb(229 229 229) 60%, rgb(229 229 229) 100%);"
+                            style=""
                         />
                         <div
                             class="flex justify-between text-xs text-neutral-500 mt-1 font-mono"
@@ -170,11 +168,6 @@ if (Astro.request.method === "POST") {
                                 >
                                     POWER OUTLETS
                                 </label>
-                                <div
-                                    class="text-lg font-black text-neutral-900"
-                                >
-                                    3/5
-                                </div>
                             </div>
                         </div>
                         <input
@@ -183,8 +176,8 @@ if (Astro.request.method === "POST") {
                             min="1"
                             max="5"
                             value="3"
-                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer"
-                            style="background: linear-gradient(to right, rgb(217 119 6) 0%, rgb(217 119 6) 60%, rgb(229 229 229) 60%, rgb(229 229 229) 100%);"
+                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer accent-amber-600"
+                            style=""
                         />
                         <div
                             class="flex justify-between text-xs text-neutral-500 mt-1 font-mono"
@@ -211,11 +204,6 @@ if (Astro.request.method === "POST") {
                                 >
                                     NOISE LEVEL
                                 </label>
-                                <div
-                                    class="text-lg font-black text-neutral-900"
-                                >
-                                    3/5
-                                </div>
                             </div>
                         </div>
                         <input
@@ -224,8 +212,8 @@ if (Astro.request.method === "POST") {
                             min="1"
                             max="5"
                             value="3"
-                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer"
-                            style="background: linear-gradient(to right, rgb(124 58 237) 0%, rgb(124 58 237) 60%, rgb(229 229 229) 60%, rgb(229 229 229) 100%);"
+                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer accent-violet-600"
+                            style=""
                         />
                         <div
                             class="flex justify-between text-xs text-neutral-500 mt-1 font-mono"
@@ -252,11 +240,6 @@ if (Astro.request.method === "POST") {
                                 >
                                     SEATING & SPACE
                                 </label>
-                                <div
-                                    class="text-lg font-black text-neutral-900"
-                                >
-                                    3/5
-                                </div>
                             </div>
                         </div>
                         <input
@@ -265,8 +248,8 @@ if (Astro.request.method === "POST") {
                             min="1"
                             max="5"
                             value="3"
-                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer"
-                            style="background: linear-gradient(to right, rgb(124 58 237) 0%, rgb(124 58 237) 60%, rgb(229 229 229) 60%, rgb(229 229 229) 100%);"
+                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer accent-blue-600"
+                            style=""
                         />
                         <div
                             class="flex justify-between text-xs text-neutral-500 mt-1 font-mono"
@@ -286,12 +269,14 @@ if (Astro.request.method === "POST") {
                     By submitting, you're helping remote workers find great
                     places to be productive. Thank you! 🙌
                 </p>
+                <button type="button" class="w-full bg-zinc-200 text-neutral-900 mb-4 py-4 font-black border-4 border-neutral-900 hover:bg-zinc-100 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1">SMART PASTE</button>
                 <button
                     type="submit"
                     class="w-full bg-amber-500 text-neutral-900 py-4 font-black border-4 border-neutral-900 hover:bg-amber-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
                 >
                     SUBMIT VENUE
                 </button>
+                
             </div>
         </form>
     </div>
