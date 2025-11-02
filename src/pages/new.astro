@@ -1,7 +1,33 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { icons } from "../components/icons";
-import { actions } from "astro:actions";
+import { db, Venue } from "astro:db";
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    const name = formData.get("name");
+    const address = formData.get("address");
+    const hours = formData.get("hours");
+    const wifiScore = formData.get("wifiScore");
+    const powerScore = formData.get("powerScore");
+    const noiseScore = formData.get("noiseScore");
+    const seatingScore = formData.get("seatingScore");
+
+    try {
+        await db.insert(Venue).values({
+            name,
+            address,
+            hours,
+            wifiScore,
+            powerScore,
+            noiseScore,
+            seatingScore,
+        });
+        return Astro.redirect("/");
+    } catch (err) {
+        console.error(err);
+    }
+}
 ---
 
 <Layout title="Workspresso - Add New Venue">
@@ -22,7 +48,7 @@ import { actions } from "astro:actions";
             </p>
         </div>
 
-        <form method="POST" action={actions.saveVenue} class="p-4 space-y-4">
+        <form method="POST" class="p-4 space-y-4">
             <!-- Basic Info Card -->
             <div
                 class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden"
@@ -195,6 +221,47 @@ import { actions } from "astro:actions";
                         <input
                             type="range"
                             name="noiseScore"
+                            min="1"
+                            max="5"
+                            value="3"
+                            class="w-full h-3 bg-neutral-200 appearance-none cursor-pointer"
+                            style="background: linear-gradient(to right, rgb(124 58 237) 0%, rgb(124 58 237) 60%, rgb(229 229 229) 60%, rgb(229 229 229) 100%);"
+                        />
+                        <div
+                            class="flex justify-between text-xs text-neutral-500 mt-1 font-mono"
+                        >
+                            <span>Loud</span>
+                            <span>Quiet</span>
+                        </div>
+                    </div>
+
+                    <!-- Seating Rating -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="w-10 h-10 bg-blue-100 flex items-center justify-center border-2 border-neutral-900"
+                            >
+                                <span
+                                    set:html={icons.volume2}
+                                    class="w-5 h5 text-blue-700"
+                                />
+                            </div>
+                            <div class="flex-1">
+                                <label
+                                    class="block text-xs font-bold text-neutral-500 mb-1"
+                                >
+                                    SEATING & SPACE
+                                </label>
+                                <div
+                                    class="text-lg font-black text-neutral-900"
+                                >
+                                    3/5
+                                </div>
+                            </div>
+                        </div>
+                        <input
+                            type="range"
+                            name="seatingScore"
                             min="1"
                             max="5"
                             value="3"
