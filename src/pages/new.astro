@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import { icons } from "../components/icons";
 import { db, Venue } from "astro:db";
-import { generate } from "../ai.ts";
 
 const message = "Help others find great work spots";
 
@@ -15,6 +14,9 @@ if (Astro.request.method === "POST") {
     const powerScore = formData.get("powerScore");
     const noiseScore = formData.get("noiseScore");
     const seatingScore = formData.get("seatingScore");
+    const vibe = formData.get("vibe");
+    const color = formData.get("color");
+    const grade = formData.get("grade");
 
     try {
         await db.insert(Venue).values({
@@ -25,6 +27,9 @@ if (Astro.request.method === "POST") {
             powerScore,
             noiseScore,
             seatingScore,
+            vibe,
+            color,
+            grade,
         });
         return Astro.redirect("/");
     } catch (err) {
@@ -269,15 +274,85 @@ if (Astro.request.method === "POST") {
                     By submitting, you're helping remote workers find great
                     places to be productive. Thank you! 🙌
                 </p>
-                <button type="button" class="w-full bg-zinc-200 text-neutral-900 mb-4 py-4 font-black border-4 border-neutral-900 hover:bg-zinc-100 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1">SMART PASTE</button>
+                <button
+                    id="paste"
+                    type="button"
+                    class="w-full bg-zinc-200 text-neutral-900 mb-4 py-4 font-black border-4 border-neutral-900 hover:bg-zinc-100 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 disable:opacity-50 disabled:cursor-not-allowed"
+                    >SMART PASTE</button
+                >
                 <button
                     type="submit"
                     class="w-full bg-amber-500 text-neutral-900 py-4 font-black border-4 border-neutral-900 hover:bg-amber-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
                 >
                     SUBMIT VENUE
                 </button>
-                
             </div>
+            <input type="hidden" name="color" value="amber" />
+            <input type="hidden" name="vibe" value="Good Vibe" />
+            <input type="hidden" name="grade" value="D" />
         </form>
     </div>
 </Layout>
+<script>
+    const pasteButton = document.querySelector("#paste");
+    pasteButton.addEventListener("click", async () => {
+        pasteButton.disabled = true;
+        const text = await navigator.clipboard.readText();
+
+        const response = await fetch("/api/generate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                prompt: `Your purpose is to categorize and extract unstructured data about cafes from user input. Do not add any additional information or explanations. If no information is available for a field, you decide what to fill based on the text given. Field hours use this format: 07:00 - 22:00. Use short sentence to describe vibe field. Choose color based on vibe, one of "emerald", "amber", "violet", or "orange". Then you grade based on the data, either 'A', 'B', 'C', or 'D'. Use English for all responses.
+
+      Classify the following data:
+      <user_data>
+      ${text}
+      </user_data>`,
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.status === "ok") {
+            const parsed = JSON.parse(result.text.text);
+            console.log(parsed);
+
+            const nameInput = document.querySelector('input[name="name"]');
+            const addressInput = document.querySelector(
+                'input[name="address"]',
+            );
+            const hoursInput = document.querySelector('input[name="hours"]');
+            const colorInput = document.querySelector('input[name="color"]');
+            const vibeInput = document.querySelector('input[name="vibe"]');
+            const gradeInput = document.querySelector('input[name="grade"]');
+
+            const wifiScoreRange = document.querySelector(
+                'input[name="wifiScore"]',
+            );
+            const powerScoreRange = document.querySelector(
+                'input[name="powerScore"]',
+            );
+            const noiseScoreRange = document.querySelector(
+                'input[name="noiseScore"]',
+            );
+            const seatingScoreRange = document.querySelector(
+                'input[name="seatingScore"]',
+            );
+
+            nameInput.value = parsed.name || "";
+            addressInput.value = parsed.address || "";
+            hoursInput.value = parsed.hours || "";
+            colorInput.value = parsed.color || "";
+            vibeInput.value = parsed.vibe || "";
+            gradeInput.value = parsed.grade || "D";
+            wifiScoreRange.value = parsed.wifiScore || "3";
+            powerScoreRange.value = parsed.powerScore || "3";
+            noiseScoreRange.value = parsed.noiseScore || "3";
+            seatingScoreRange.value = parsed.seatingScore || "3";
+        }
+        pasteButton.disabled = false;
+    });
+</script>
