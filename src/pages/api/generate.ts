@@ -2,8 +2,8 @@ import { generate } from "../../ai.ts";
 
 export async function POST({ request }: { request: Request }) {
   try {
-    const { prompt } = await request.json();
-    const result = await generate(prompt);
+    const { prompt, config } = await request.json();
+    const result = await generate(prompt, config);
 
     return new Response(JSON.stringify(result), {
       status: 200,

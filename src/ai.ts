@@ -1,6 +1,6 @@
 type Result = { status: "ok" | "ko"; text?: string; error?: string };
 export async function generate(
-  prompt: string,
+  prompt: string, config: Record<string, unknown> = {},
 ): Promise<Result> {
   const url =
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
@@ -18,25 +18,7 @@ export async function generate(
             parts: [{ text: prompt }],
           },
         ],
-        "generationConfig": {
-          "responseMimeType": "application/json",
-          "responseSchema": {
-            type: "OBJECT",
-            properties: {
-              name: { "type": "STRING" },
-              address: { "type": "STRING" },
-              hours: { "type": "STRING" },
-              "wifiScore": { "type": "INTEGER" },
-              "powerScore": { "type": "INTEGER" },
-              "noiseScore": { "type": "INTEGER" },
-              "seatingScore": { "type": "INTEGER" },
-              vibe: { "type": "STRING" },
-              color: { "type": "STRING" },
-              url: { "type": "STRING" },
-              grade: { "type": "STRING" },
-            },
-          },
-        },
+        "generationConfig": config,
       }),
     });
 

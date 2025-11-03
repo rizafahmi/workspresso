@@ -311,6 +311,25 @@ if (Astro.request.method === "POST") {
       <user_data>
       ${text}
       </user_data>`,
+                config: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            name: { type: "STRING" },
+                            address: { type: "STRING" },
+                            hours: { type: "STRING" },
+                            wifiScore: { type: "INTEGER" },
+                            powerScore: { type: "INTEGER" },
+                            noiseScore: { type: "INTEGER" },
+                            seatingScore: { type: "INTEGER" },
+                            vibe: { type: "STRING" },
+                            color: { type: "STRING" },
+                            url: { type: "STRING" },
+                            grade: { type: "STRING" },
+                        },
+                    },
+                },
             }),
         });
 
