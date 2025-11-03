@@ -13,7 +13,10 @@ const Venue = defineTable({
     url: column.text({ optional: true }),
     hours: column.text(),
     vibe: column.text({ optional: true }),
-    color: column.text({ enum: ["emerald", "amber", "violet", "orange"], default: "emerald" }),
+    color: column.text({
+      enum: ["emerald", "amber", "violet", "orange"],
+      default: "emerald",
+    }),
     created_at: column.date({ default: NOW }),
   },
 });
@@ -25,6 +28,10 @@ const Comment = defineTable({
     userName: column.text(),
     comment: column.text(),
     rating: column.number({ optional: true }),
+    sentiment: column.text({
+      enum: ["positive", "neutral", "negative"],
+      optional: true,
+    }),
     created_at: column.date({ default: NOW }),
   },
 });

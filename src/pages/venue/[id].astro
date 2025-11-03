@@ -265,11 +265,19 @@ const comments = await db
                 </div>
                 <div class="p-5">
                     <!-- Comment Form -->
-                    <form id="comment-form" class="mb-6 pb-6 border-b-2 border-neutral-200">
-                        <h3 class="font-black text-neutral-900 mb-4">SHARE YOUR EXPERIENCE</h3>
+                    <form
+                        id="comment-form"
+                        class="mb-6 pb-6 border-b-2 border-neutral-200"
+                    >
+                        <h3 class="font-black text-neutral-900 mb-4">
+                            SHARE YOUR EXPERIENCE
+                        </h3>
                         <div class="space-y-3">
                             <div>
-                                <label for="userName" class="block text-xs font-bold text-neutral-500 mb-1">
+                                <label
+                                    for="userName"
+                                    class="block text-xs font-bold text-neutral-500 mb-1"
+                                >
                                     YOUR NAME
                                 </label>
                                 <input
@@ -282,7 +290,10 @@ const comments = await db
                                 />
                             </div>
                             <div>
-                                <label for="comment" class="block text-xs font-bold text-neutral-500 mb-1">
+                                <label
+                                    for="comment"
+                                    class="block text-xs font-bold text-neutral-500 mb-1"
+                                >
                                     YOUR COMMENT
                                 </label>
                                 <textarea
@@ -304,8 +315,13 @@ const comments = await db
                     </form>
 
                     <!-- Success Message -->
-                    <div id="comment-success" class="hidden mb-6 p-4 bg-emerald-100 border-4 border-emerald-700">
-                        <p class="font-black text-emerald-900">✓ Comment posted successfully!</p>
+                    <div
+                        id="comment-success"
+                        class="hidden mb-6 p-4 bg-emerald-100 border-4 border-emerald-700"
+                    >
+                        <p class="font-black text-emerald-900">
+                            ✓ Comment posted successfully!
+                        </p>
                     </div>
 
                     <!-- Comments List -->
@@ -313,29 +329,36 @@ const comments = await db
                         <h3 class="font-black text-neutral-900 mb-4">
                             COMMENTS ({comments.length})
                         </h3>
-                        {comments.length === 0 ? (
-                            <div class="text-center py-8 text-neutral-500 font-mono">
-                                No comments yet. Be the first to share your experience!
-                            </div>
-                        ) : (
-                            <div class="space-y-4">
-                                {comments.map((comment) => (
-                                    <div class="border-4 border-neutral-200 p-4">
-                                        <div class="flex items-start justify-between mb-2">
-                                            <div class="font-black text-neutral-900">
-                                                {comment.userName}
+                        {
+                            comments.length === 0 ? (
+                                <div class="text-center py-8 text-neutral-500 font-mono">
+                                    No comments yet. Be the first to share your
+                                    experience!
+                                </div>
+                            ) : (
+                                <div class="space-y-4">
+                                    {comments.map((comment) => (
+                                        <div
+                                            class={`border-4 border-neutral-200 p-4 ${comment.sentiment === "Positive" ? "bg-emerald-100" : "bg-red-100"}`}
+                                        >
+                                            <div class="flex items-start justify-between mb-2">
+                                                <div class="font-black text-neutral-900">
+                                                    {comment.userName}
+                                                </div>
+                                                <div class="text-xs text-neutral-500 font-mono">
+                                                    {new Date(
+                                                        comment.created_at,
+                                                    ).toLocaleDateString()}
+                                                </div>
                                             </div>
-                                            <div class="text-xs text-neutral-500 font-mono">
-                                                {new Date(comment.created_at).toLocaleDateString()}
-                                            </div>
+                                            <p class="text-neutral-700">
+                                                {comment.comment}
+                                            </p>
                                         </div>
-                                        <p class="text-neutral-700">
-                                            {comment.comment}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                                    ))}
+                                </div>
+                            )
+                        }
                     </div>
                 </div>
             </div>
@@ -369,7 +392,9 @@ const comments = await db
     feedbackNo?.addEventListener("click", () => handleFeedback(false));
 
     // Handle comment form submission
-    const commentForm = document.getElementById("comment-form") as HTMLFormElement;
+    const commentForm = document.getElementById(
+        "comment-form",
+    ) as HTMLFormElement;
     const commentSuccess = document.getElementById("comment-success");
 
     commentForm?.addEventListener("submit", async (e) => {
@@ -396,7 +421,7 @@ const comments = await db
             if (response.ok) {
                 commentSuccess?.classList.remove("hidden");
                 commentForm.reset();
-                
+
                 // Reload page after 1.5 seconds to show new comment
                 setTimeout(() => {
                     window.location.reload();
