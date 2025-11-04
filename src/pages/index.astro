@@ -3,7 +3,27 @@ import { db, Venue } from "astro:db";
 import Layout from "../layouts/Layout.astro";
 import { icons } from "../components/icons";
 
-const venues = await db.select().from(Venue);
+import { embedText, cosineSimilarity } from "../embeddings.ts";
+
+let venues = await db.select().from(Venue);
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    const query = formData.get("q")?.toString() || "";
+    const queryEmbed = await embedText(query);
+    let results = [];
+    for (const venue of venues) {
+        const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}`;
+        console.log(text);
+        const venueEmbed = await embedText(text);
+        const similarity = cosineSimilarity(queryEmbed, venueEmbed);
+        console.log(similarity);
+        results.push({ ...venue, similarity });
+    }
+    results = results.filter((v) => v.similarity > 0.5);
+    results.sort((a, b) => b.similarity - a.similarity);
+    venues = results;
+}
 ---
 
 <Layout title="Workspresso - Find Your Workspace">
@@ -37,8 +57,8 @@ const venues = await db.select().from(Venue);
                     </a>
                 </div>
             </div>
-            
-            <form id="search-form" class="mt-4">
+
+            <form id="search-form" method="POST" class="mt-4">
                 <div class="relative">
                     <input
                         type="text"
@@ -180,95 +200,3 @@ const venues = await db.select().from(Venue);
         </div>
     </div>
 </Layout>
-
-<script>
-	const searchInput = document.getElementById("search-input") as HTMLInputElement;
-	const venuesContainer = document.getElementById("venues-container");
-	const venueCount = document.getElementById("venue-count");
-
-	let debounceTimer: number;
-
-	searchInput?.addEventListener("input", () => {
-		clearTimeout(debounceTimer);
-		debounceTimer = window.setTimeout(async () => {
-			const query = searchInput.value.trim();
-			
-			try {
-				const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-				const venues = await response.json();
-				
-				if (venueCount) {
-					venueCount.textContent = venues.length.toString();
-				}
-
-				if (venuesContainer) {
-					venuesContainer.innerHTML = venues.map((venue: any) => {
-						const colorClass = 
-							venue.color === "emerald" ? "from-emerald-400 to-teal-500" :
-							venue.color === "amber" ? "from-amber-400 to-orange-500" :
-							venue.color === "violet" ? "from-violet-400 to-purple-500" :
-							"from-orange-400 to-red-500";
-
-						const getScoreColor = (score: number) => 
-							score >= 4 ? "text-emerald-600" : 
-							score >= 3 ? "text-amber-600" : 
-							"text-rose-600";
-
-						return `
-							<a href="/venue/${venue.id}" class="venue-card block group bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden">
-								<div class="h-2 bg-gradient-to-r ${colorClass}"></div>
-								<div class="p-5">
-									<div class="flex justify-between items-start mb-4">
-										<div class="flex-1">
-											<h3 class="text-2xl font-black text-neutral-900 mb-1 leading-tight">${venue.name}</h3>
-											<div class="text-sm text-neutral-600 font-mono">${venue.vibe || ''}</div>
-										</div>
-										<div class="w-16 h-16 bg-neutral-900 text-white font-black text-3xl flex items-center justify-center border-4 border-neutral-900 -mt-2 -mr-2">
-											${venue.grade}
-										</div>
-									</div>
-									<div class="grid grid-cols-4 gap-2 mt-4 pt-4 border-t-2 border-neutral-200">
-										<div class="text-center">
-											<div class="w-6 h-6 mx-auto mb-1 ${getScoreColor(venue.wifiScore)}">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg>
-											</div>
-											<div class="text-xs font-black">${venue.wifiScore}/5</div>
-										</div>
-										<div class="text-center">
-											<div class="w-6 h-6 mx-auto mb-1 ${getScoreColor(venue.powerScore)}">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-											</div>
-											<div class="text-xs font-black">${venue.powerScore}/5</div>
-										</div>
-										<div class="text-center">
-											<div class="w-6 h-6 mx-auto mb-1 ${getScoreColor(venue.noiseScore)}">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"></path><path d="M16 9a5 5 0 0 1 0 6"></path><path d="M19.364 18.364a9 9 0 0 0 0-12.728"></path></svg>
-											</div>
-											<div class="text-xs font-black">${venue.noiseScore}/5</div>
-										</div>
-										<div class="text-center">
-											<div class="w-6 h-6 mx-auto mb-1 ${getScoreColor(venue.seatingScore)}">
-												<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-											</div>
-											<div class="text-xs font-black">${venue.seatingScore}/5</div>
-										</div>
-									</div>
-								</div>
-							</a>
-						`;
-					}).join('');
-
-					if (venues.length === 0) {
-						venuesContainer.innerHTML = `
-							<div class="text-center py-12">
-								<p class="text-neutral-600 font-mono">No venues found matching "${query}"</p>
-							</div>
-						`;
-					}
-				}
-			} catch (error) {
-				console.error("Search error:", error);
-			}
-		}, 300);
-	});
-</script>
