@@ -4,6 +4,7 @@ const Venue = defineTable({
   columns: {
     id: column.number({ primaryKey: true }),
     name: column.text(),
+    description: column.text({ optional: true }),
     grade: column.text({ default: "-" }),
     wifiScore: column.number(),
     powerScore: column.number(),

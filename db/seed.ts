@@ -4,6 +4,7 @@ export default async function seed() {
   await db.insert(Venue).values({
     id: 1,
     name: "Brew & Bytes Cafe",
+    description: "Perfect workspace for developers and freelancers. High-speed fiber internet, plenty of power outlets, and a quiet atmosphere. Specializes in artisan coffee and healthy snacks.",
     grade: "A",
     wifiScore: 5,
     powerScore: 5,
@@ -18,6 +19,7 @@ export default async function seed() {
   await db.insert(Venue).values({
     id: 2,
     name: "The Daily Grind",
+    description: "Traditional coffee shop with solid WiFi and decent seating. Can get noisy during rush hours. Great for casual work sessions and meetings.",
     grade: "B",
     wifiScore: 4,
     powerScore: 3,
@@ -32,6 +34,7 @@ export default async function seed() {
   await db.insert(Venue).values({
     id: 3,
     name: "Code & Coffee Co.",
+    description: "Premium coworking cafe designed for programmers and tech professionals. Ultra-fast WiFi, standing desks available, and coding-themed decor.",
     grade: "A",
     wifiScore: 5,
     powerScore: 5,
@@ -46,6 +49,7 @@ export default async function seed() {
   await db.insert(Venue).values({
     id: 4,
     name: "Cafe Momentum",
+    description: "Busy neighborhood cafe with limited workspace amenities. WiFi can be unreliable and outlets are scarce. Better for quick coffee than extended work sessions.",
     grade: "C",
     wifiScore: 2,
     powerScore: 2,

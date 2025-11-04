@@ -48,9 +48,14 @@ const comments = await db
                         <h1 class="text-3xl font-black mb-2 leading-tight">
                             {venue.name}
                         </h1>
-                        <div class="text-sm text-gray-400 font-mono">
+                        <div class="text-sm text-gray-400 font-mono mb-3">
                             {venue.vibe}
                         </div>
+                        {venue.description && (
+                            <p class="text-sm text-gray-300 leading-relaxed">
+                                {venue.description}
+                            </p>
+                        )}
                     </div>
                 </div>
 
