@@ -1,7 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { icons } from "../components/icons";
-import { db, Venue } from "astro:db";
+import { eq, db, Venue } from "astro:db";
+import { generateTags } from "../ai.ts";
 
 const message = "Help others find great work spots";
 
@@ -37,10 +38,28 @@ if (Astro.request.method === "POST") {
         });
 
         const id = parseInt(result.lastInsertRowid);
-        // updateVenueTags(id)
+        updateVenueTags(id);
         return Astro.redirect(`/venue/${id}`);
     } catch (err) {
         console.error(err);
+    }
+}
+
+async function updateVenueTags(venueId: number) {
+    console.log(venueId);
+    const venue = await db
+        .select()
+        .from(Venue)
+        .where(eq(Venue.id, Number(venueId)))
+        .get();
+    if (venue && venue.description) {
+        const { labels } = await generateTags(venue.description);
+        const tags = labels.join(",");
+        await db
+            .update(Venue)
+            .set({ tags })
+            .where(eq(Venue.id, Number(venueId)))
+            .run();
     }
 }
 ---
