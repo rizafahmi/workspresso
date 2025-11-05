@@ -52,7 +52,8 @@ const venues = await db.select().from(Venue);
 								<th class="px-4 py-3 text-left font-black text-sm">POWER</th>
 								<th class="px-4 py-3 text-left font-black text-sm">NOISE</th>
 								<th class="px-4 py-3 text-left font-black text-sm">SEATING</th>
-								<th class="px-4 py-3 text-left font-black text-sm">CREATED</th>
+								<th class="px-4 py-3 text-left font-black text-sm">SUMMARY</th>
+								<th class="px-4 py-3 text-left font-black text-sm">SATISFACTION</th>
 								<th class="px-4 py-3 text-left font-black text-sm">ACTIONS</th>
 							</tr>
 						</thead>
@@ -96,8 +97,31 @@ const venues = await db.select().from(Venue);
 										<td class="px-4 py-3 text-center font-mono text-sm">
 											{venue.seatingScore}/5
 										</td>
-										<td class="px-4 py-3 text-xs text-neutral-600 font-mono">
-											{new Date(venue.created_at).toLocaleDateString()}
+										<td class="px-4 py-3 text-sm text-neutral-600 max-w-xs break-words">
+											{venue.summary || '-'}
+										</td>
+										<td class="px-4 py-3 text-center">
+											{venue.satisfaction ? (
+												<span
+													class={`inline-block px-3 py-1 font-black text-sm uppercase ${
+														venue.satisfaction === "awesome"
+															? "bg-emerald-500 text-white border-2 border-emerald-700"
+															: venue.satisfaction === "great"
+																? "bg-emerald-100 text-emerald-800 border-2 border-emerald-600"
+																: venue.satisfaction === "good"
+																	? "bg-amber-100 text-amber-800 border-2 border-amber-600"
+																	: venue.satisfaction === "ok"
+																		? "bg-orange-100 text-orange-800 border-2 border-orange-600"
+																		: venue.satisfaction === "bad"
+																			? "bg-rose-100 text-rose-800 border-2 border-rose-600"
+																			: "bg-rose-500 text-white border-2 border-rose-700"
+													}`}
+												>
+													{venue.satisfaction}
+												</span>
+											) : (
+												<span class="text-neutral-400">-</span>
+											)}
 										</td>
 										<td class="px-4 py-3">
 											<a

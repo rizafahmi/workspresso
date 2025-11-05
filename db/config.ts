@@ -19,6 +19,11 @@ const Venue = defineTable({
       enum: ["emerald", "amber", "violet", "orange"],
       default: "emerald",
     }),
+    summary: column.text({ optional: true }),
+    satisfaction: column.text({
+      enum: ["worst", "bad", "ok", "good", "great", "awesome"],
+      optional: true,
+    }),
     created_at: column.date({ default: NOW }),
   },
 });

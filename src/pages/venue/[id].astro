@@ -278,6 +278,16 @@ const comments = await db
                     <h2 class="font-black text-sm">USER TESTIMONIALS</h2>
                 </div>
                 <div class="p-5">
+                    {venue.summary && (
+                        <div class="mb-6 p-4 bg-amber-50 border-4 border-amber-400">
+                            <div class="text-xs font-bold text-amber-800 mb-2">
+                                SUMMARY
+                            </div>
+                            <p class="text-neutral-900 font-bold">
+                                {venue.summary}
+                            </p>
+                        </div>
+                    )}
                     <!-- Comment Form -->
                     <form
                         id="comment-form"
