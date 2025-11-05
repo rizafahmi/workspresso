@@ -3,7 +3,7 @@ import { generate } from "../../ai.ts";
 
 export async function POST({ request }: { request: Request }) {
   try {
-    const { venueId, userName, comment } = await request.json();
+    const { venueId, userName, comment, sentiment } = await request.json();
 
     if (!venueId || !userName || !comment) {
       return new Response(
@@ -15,44 +15,11 @@ export async function POST({ request }: { request: Request }) {
       );
     }
 
-    // Get the next ID by counting existing comments
-    const existingComments = await db.select().from(Comment);
-    const nextId = existingComments.length + 1;
-    const prompt =
-      `Your job is to categorize whether text has a positive or negative sentiment. Just return either Positive, Negative or Neutral. Here are some examples of text you might see:
-
-    User: I love this cafe!
-    Assistant: Positive
-    User: Bagus sekali.
-    Assistant: Positive
-    User: Kopinya pahit.
-    Assistant: Negative
-    User: Meh..
-    Assistant: Neutral
-    User: Could be better.
-    Assistant: Neutral
-
-    Now it's your turn!
-
-    User: ${comment.trim()}
-    Assistant:
-    `;
-
-    const config = {
-      "responseMimeType": "application/json",
-      "responseSchema": {
-        type: "STRING",
-      },
-    };
-    const { status, text } = await generate(prompt, config);
-    console.log(text);
-
     await db.insert(Comment).values({
-      id: nextId,
       venueId: Number(venueId),
       userName: userName.trim(),
       comment: comment.trim(),
-      sentiment: text.text?.replaceAll('"', "").toLowerCase() || "neutral",
+      sentiment: sentiment.trim(),
     });
 
     updateCommentsSummary(venueId);

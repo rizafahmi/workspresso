@@ -51,20 +51,24 @@ const comments = await db
                         <div class="text-sm text-gray-400 font-mono mb-3">
                             {venue.vibe}
                         </div>
-                        {venue.description && (
-                            <p class="text-sm text-gray-300 leading-relaxed mb-3">
-                                {venue.description}
-                            </p>
-                        )}
-                        {venue.tags && (
-                            <div class="flex flex-wrap gap-1">
-                                {venue.tags.split(',').map((tag) => (
-                                    <span class="text-xs px-2 py-1 bg-amber-500 text-neutral-900 font-mono font-bold">
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
+                        {
+                            venue.description && (
+                                <p class="text-sm text-gray-300 leading-relaxed mb-3">
+                                    {venue.description}
+                                </p>
+                            )
+                        }
+                        {
+                            venue.tags && (
+                                <div class="flex flex-wrap gap-1">
+                                    {venue.tags.split(",").map((tag) => (
+                                        <span class="text-xs px-2 py-1 bg-amber-500 text-neutral-900 font-mono font-bold">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            )
+                        }
                     </div>
                 </div>
 
@@ -278,16 +282,18 @@ const comments = await db
                     <h2 class="font-black text-sm">USER TESTIMONIALS</h2>
                 </div>
                 <div class="p-5">
-                    {venue.summary && (
-                        <div class="mb-6 p-4 bg-amber-50 border-4 border-amber-400">
-                            <div class="text-xs font-bold text-amber-800 mb-2">
-                                SUMMARY
+                    {
+                        venue.summary && (
+                            <div class="mb-6 p-4 bg-amber-50 border-4 border-amber-400">
+                                <div class="text-xs font-bold text-amber-800 mb-2">
+                                    SUMMARY
+                                </div>
+                                <p class="text-neutral-900 font-bold">
+                                    {venue.summary}
+                                </p>
                             </div>
-                            <p class="text-neutral-900 font-bold">
-                                {venue.summary}
-                            </p>
-                        </div>
-                    )}
+                        )
+                    }
                     <!-- Comment Form -->
                     <form
                         id="comment-form"
@@ -391,6 +397,12 @@ const comments = await db
 </Layout>
 
 <script>
+    // Headstart Gemini Nano
+    const availability = await LanguageModel.availability();
+    let session;
+    if (availability !== "unavailable") {
+        session = await startAISession();
+    }
     const feedbackYes = document.getElementById("feedback-yes");
     const feedbackNo = document.getElementById("feedback-no");
     const feedbackSection = document.getElementById("feedback-section");
@@ -428,6 +440,8 @@ const comments = await db
         const userName = formData.get("userName") as string;
         const comment = formData.get("comment") as string;
         const venueId = window.location.pathname.split("/").pop();
+        // Let's analyze sentiment using Chrome's build in gemini nano
+        const sentiment = (await analyzeSentiment(session, comment)) as string;
 
         try {
             const response = await fetch("/api/comments", {
@@ -439,6 +453,7 @@ const comments = await db
                     venueId: Number(venueId),
                     userName,
                     comment,
+                    sentiment
                 }),
             });
 
@@ -458,4 +473,42 @@ const comments = await db
             alert("An error occurred. Please try again.");
         }
     });
+
+    async function analyzeSentiment(session, comment) {
+        const result = await session.prompt(`User: ${comment.trim()}`);
+        console.log(result);
+
+        return result;
+    }
+
+    async function startAISession() {
+        const session = await LanguageModel.create({
+            initialPrompts: [
+                {
+                    role: "system",
+                    content: `Your job is to categorize whether text has a positive or negative sentiment. Just return either positive, negative or neutral. Here are some examples of text you might see:
+
+                    User: I love this cafe!
+                    Assistant: positive
+                    User: Bagus sekali.
+                    Assistant: positive
+                    User: Kopinya pahit.
+                    Assistant: negative
+                    User: Meh..
+                    Assistant: neutral
+                    User: Could be better.
+                    Assistant: neutral
+
+                    Now it's your turn!
+                    `,
+                },
+            ],
+            monitor: (m) => {
+                m.addEventListener("downloadprogress", (e) => {
+                    console.info(`Downloaded ${e.loaded * 100}%`);
+                });
+            },
+        });
+        return session;
+    }
 </script>
