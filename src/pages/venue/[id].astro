@@ -353,7 +353,7 @@ const comments = await db
                                 <div class="space-y-4">
                                     {comments.map((comment) => (
                                         <div
-                                            class={`border-4 border-neutral-200 p-4 ${comment.sentiment === "Positive" ? "bg-emerald-100" : "bg-red-100"}`}
+                                            class={`border-4 border-neutral-200 p-4 ${comment.sentiment === "positive" ? "bg-emerald-100" : "bg-red-100"}`}
                                         >
                                             <div class="flex items-start justify-between mb-2">
                                                 <div class="font-black text-neutral-900">
