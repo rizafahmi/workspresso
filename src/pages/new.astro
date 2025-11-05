@@ -9,6 +9,7 @@ if (Astro.request.method === "POST") {
     const formData = await Astro.request.formData();
     const name = formData.get("name");
     const description = formData.get("description");
+    const tags = formData.get("tags");
     const address = formData.get("address");
     const hours = formData.get("hours");
     const wifiScore = formData.get("wifiScore");
@@ -20,9 +21,10 @@ if (Astro.request.method === "POST") {
     const grade = formData.get("grade");
 
     try {
-        await db.insert(Venue).values({
+        const result = await db.insert(Venue).values({
             name,
             description,
+            tags,
             address,
             hours,
             wifiScore,
@@ -33,7 +35,10 @@ if (Astro.request.method === "POST") {
             color,
             grade,
         });
-        return Astro.redirect("/");
+
+        const id = parseInt(result.lastInsertRowid);
+        // updateVenueTags(id)
+        return Astro.redirect(`/venue/${id}`);
     } catch (err) {
         console.error(err);
     }
@@ -124,6 +129,23 @@ if (Astro.request.method === "POST") {
                             placeholder="Describe the venue's workspace amenities, atmosphere, and what makes it unique..."
                             class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-amber-500 resize-none"
                         ></textarea>
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-xs font-bold text-neutral-500 mb-2"
+                        >
+                            TAGS
+                        </label>
+                        <input
+                            type="text"
+                            name="tags"
+                            placeholder="e.g., coworking,wifi,quiet,coffee (comma-separated)"
+                            class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-amber-500"
+                        />
+                        <p class="text-xs text-neutral-500 mt-1 font-mono">
+                            Separate tags with commas (no spaces after comma)
+                        </p>
                     </div>
                 </div>
             </div>
@@ -321,7 +343,7 @@ if (Astro.request.method === "POST") {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                prompt: `Your purpose is to categorize and extract unstructured data about cafes from user input. Do not add any additional information or explanations. If no information is available for a field, you decide what to fill based on the text given. Field hours use this format: 07:00 - 22:00. Use short sentence to describe vibe field. For description field, write 1-2 sentences about workspace amenities, atmosphere, and unique features. Choose color based on vibe, one of "emerald", "amber", "violet", or "orange". Then you grade based on the data, either 'A', 'B', 'C', or 'D'. Use English for all responses.
+                prompt: `Your purpose is to categorize and extract unstructured data about cafes from user input. Do not add any additional information or explanations. If no information is available for a field, you decide what to fill based on the text given. Field hours use this format: 07:00 - 22:00. Use short sentence to describe vibe field. For description field, write 1-2 sentences about workspace amenities, atmosphere, and unique features. For tags field, generate comma-separated keywords (no spaces after commas) related to the venue's amenities and characteristics. Choose color based on vibe, one of "emerald", "amber", "violet", or "orange". Then you grade based on the data, either 'A', 'B', 'C', or 'D'. Use English for all responses.
 
       Classify the following data:
       <user_data>
@@ -334,6 +356,7 @@ if (Astro.request.method === "POST") {
                         properties: {
                             name: { type: "STRING" },
                             description: { type: "STRING" },
+                            tags: { type: "STRING" },
                             address: { type: "STRING" },
                             hours: { type: "STRING" },
                             wifiScore: { type: "INTEGER" },
@@ -354,7 +377,6 @@ if (Astro.request.method === "POST") {
 
         if (result.status === "ok") {
             const parsed = JSON.parse(result.text.text);
-            console.log(parsed);
 
             const nameInput = document.querySelector('input[name="name"]');
             const addressInput = document.querySelector(
@@ -380,10 +402,12 @@ if (Astro.request.method === "POST") {
             const descriptionInput = document.querySelector(
                 'textarea[name="description"]',
             );
+            const tagsInput = document.querySelector('input[name="tags"]');
 
             nameInput.value = parsed.name || "";
             addressInput.value = parsed.address || "";
             descriptionInput.value = parsed.description || "";
+            tagsInput.value = parsed.tags || "";
             hoursInput.value = parsed.hours || "";
             colorInput.value = parsed.color || "";
             vibeInput.value = parsed.vibe || "";

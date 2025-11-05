@@ -13,7 +13,7 @@ if (Astro.request.method === "POST") {
     const queryEmbed = await embedText(query);
     let results = [];
     for (const venue of venues) {
-        const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}`;
+        const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
         console.log(text);
         const venueEmbed = await embedText(text);
         const similarity = cosineSimilarity(queryEmbed, venueEmbed);
@@ -117,9 +117,20 @@ if (Astro.request.method === "POST") {
                                         {venue.vibe}
                                     </div>
                                     {venue.description && (
-                                        <p class="text-sm text-neutral-700 leading-relaxed">
+                                        <p class="text-sm text-neutral-700 leading-relaxed mb-2">
                                             {venue.description}
                                         </p>
+                                    )}
+                                    {venue.tags && (
+                                        <div class="flex flex-wrap gap-1 mt-2">
+                                            {venue.tags
+                                                .split(",")
+                                                .map((tag) => (
+                                                    <span class="text-xs px-2 py-1 bg-neutral-100 border border-neutral-300 text-neutral-700 font-mono">
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                        </div>
                                     )}
                                 </div>
                                 <div class="w-16 h-16 bg-neutral-900 text-white font-black text-3xl flex items-center justify-center border-4 border-neutral-900 -mt-2 -mr-2">

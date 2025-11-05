@@ -52,9 +52,18 @@ const comments = await db
                             {venue.vibe}
                         </div>
                         {venue.description && (
-                            <p class="text-sm text-gray-300 leading-relaxed">
+                            <p class="text-sm text-gray-300 leading-relaxed mb-3">
                                 {venue.description}
                             </p>
+                        )}
+                        {venue.tags && (
+                            <div class="flex flex-wrap gap-1">
+                                {venue.tags.split(',').map((tag) => (
+                                    <span class="text-xs px-2 py-1 bg-amber-500 text-neutral-900 font-mono font-bold">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
                         )}
                     </div>
                 </div>
