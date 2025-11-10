@@ -24,3 +24,6 @@ pnpm-debug.log*
 .idea/
 
 docs/
+.repoprompt/
+playwright-report/
+test-results/
