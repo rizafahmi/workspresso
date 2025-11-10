@@ -301,6 +301,21 @@ const comments = await db
                                     placeholder="Tell us about your experience..."
                                 ></textarea>
                             </div>
+                            <div>
+                                <label
+                                    for="fileUpload"
+                                    class="block text-xs font-bold text-neutral-500 mb-1"
+                                >
+                                    UPLOAD IMAGE (OPTIONAL)
+                                </label>
+                                <input
+                                    type="file"
+                                    id="fileUpload"
+                                    name="fileUpload"
+                                    accept="image/*"
+                                    class="w-full px-4 py-3 border-4 border-neutral-900 font-bold text-neutral-900 focus:outline-none focus:border-amber-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:font-bold file:bg-amber-100 file:text-neutral-900 hover:file:bg-amber-200"
+                                />
+                            </div>
                             <button
                                 type="submit"
                                 class="w-full bg-amber-500 text-neutral-900 py-4 font-black border-4 border-neutral-900 hover:bg-amber-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
@@ -347,9 +362,16 @@ const comments = await db
                                                     ).toLocaleDateString()}
                                                 </div>
                                             </div>
-                                            <p class="text-neutral-700">
+                                            <p class="text-neutral-700 mb-3">
                                                 {comment.comment}
                                             </p>
+                                            {comment.imageUrl && (
+                                                <img
+                                                    src={comment.imageUrl}
+                                                    alt="Comment attachment"
+                                                    class="max-w-full h-auto border-4 border-neutral-900 mt-3"
+                                                />
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -405,9 +427,22 @@ const comments = await db
         const formData = new FormData(commentForm);
         const userName = formData.get("userName") as string;
         const comment = formData.get("comment") as string;
+        const fileUpload = formData.get("fileUpload") as File;
         const venueId = window.location.pathname.split("/").pop();
         // Let's analyze sentiment using Chrome's build in gemini nano
         const sentiment = (await analyzeSentiment(session, comment)) as string;
+
+        let imageUrl = null;
+        
+        // Handle file upload if present
+        if (fileUpload && fileUpload.size > 0) {
+            const reader = new FileReader();
+            const base64Promise = new Promise((resolve) => {
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(fileUpload);
+            });
+            imageUrl = await base64Promise;
+        }
 
         try {
             const response = await fetch("/api/comments", {
@@ -420,6 +455,7 @@ const comments = await db
                     userName,
                     comment,
                     sentiment,
+                    imageUrl,
                 }),
             });
 

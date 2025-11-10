@@ -39,6 +39,7 @@ const Comment = defineTable({
       enum: ["positive", "neutral", "negative"],
       optional: true,
     }),
+    imageUrl: column.text({ optional: true }),
     created_at: column.date({ default: NOW }),
   },
 });

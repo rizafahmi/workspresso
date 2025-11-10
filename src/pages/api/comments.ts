@@ -3,7 +3,7 @@ import { generate } from "../../ai.ts";
 
 export async function POST({ request }: { request: Request }) {
   try {
-    const { venueId, userName, comment, sentiment } = await request.json();
+    const { venueId, userName, comment, sentiment, imageUrl } = await request.json();
 
     if (!venueId || !userName || !comment) {
       return new Response(
@@ -20,6 +20,7 @@ export async function POST({ request }: { request: Request }) {
       userName: userName.trim(),
       comment: comment.trim(),
       sentiment: sentiment.trim(),
+      imageUrl: imageUrl ? imageUrl : null,
     });
 
     updateCommentsSummary(venueId);
