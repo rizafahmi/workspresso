@@ -224,40 +224,6 @@ const comments = await db
             </div>
 
             <div
-                id="feedback-section"
-                class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden"
-            >
-                <div class="bg-neutral-900 text-white px-4 py-3">
-                    <h2 class="font-black text-sm">DATA VERIFICATION</h2>
-                </div>
-                <div class="p-5">
-                    <p class="font-bold text-neutral-900 mb-4">
-                        Was this info accurate?
-                    </p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button
-                            id="feedback-yes"
-                            class="bg-emerald-500 text-white py-4 font-black border-4 border-neutral-900 hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
-                        >
-                            <div class="w-5 h-5">
-                                <Fragment set:html={icons.thumbsUp} />
-                            </div>
-                            YES
-                        </button>
-                        <button
-                            id="feedback-no"
-                            class="bg-rose-500 text-white py-4 font-black border-4 border-neutral-900 hover:bg-rose-400 transition-colors flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
-                        >
-                            <div class="w-5 h-5">
-                                <Fragment set:html={icons.thumbsDown} />
-                            </div>
-                            NO
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div
                 id="feedback-received"
                 class="hidden bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8 text-center"
             >
@@ -453,7 +419,7 @@ const comments = await db
                     venueId: Number(venueId),
                     userName,
                     comment,
-                    sentiment
+                    sentiment,
                 }),
             });
 
