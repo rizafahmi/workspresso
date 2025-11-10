@@ -350,7 +350,7 @@ const comments = await db
                                 <div class="space-y-4">
                                     {comments.map((comment) => (
                                         <div
-                                            class={`border-4 border-neutral-200 p-4 ${comment.sentiment === "positive" ? "bg-emerald-100" : "bg-red-100"}`}
+                                            class={`border-4 border-neutral-200 p-4 ${comment.sentiment === "positive" ? "!border-l-8 !border-emerald-500" : "!border-l-8 !border-red-500"}`}
                                         >
                                             <div class="flex items-start justify-between mb-2">
                                                 <div class="font-black text-neutral-900">
@@ -433,7 +433,7 @@ const comments = await db
         const sentiment = (await analyzeSentiment(session, comment)) as string;
 
         let imageUrl = null;
-        
+
         // Handle file upload if present
         if (fileUpload && fileUpload.size > 0) {
             const reader = new FileReader();
