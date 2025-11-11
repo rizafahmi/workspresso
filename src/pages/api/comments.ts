@@ -1,9 +1,18 @@
 import { Comment, db, eq, Venue } from "astro:db";
-import { generate } from "../../ai.ts";
+import { generate, sendImageAndGenerate } from "../../ai.ts";
 
 export async function POST({ request }: { request: Request }) {
   try {
-    const { venueId, userName, comment, sentiment, imageUrl } = await request.json();
+    const { venueId, userName, comment, sentiment, imageUrl } = await request
+      .json();
+
+    const { status, result } = await checkImage(imageUrl);
+    console.log({ status, result });
+    const checkData = JSON.parse(result.text);
+    let imageData = null;
+    if (checkData.status === "ACCEPTED") {
+      imageData = imageUrl;
+    }
 
     if (!venueId || !userName || !comment) {
       return new Response(
@@ -20,7 +29,7 @@ export async function POST({ request }: { request: Request }) {
       userName: userName.trim(),
       comment: comment.trim(),
       sentiment: sentiment.trim(),
-      imageUrl: imageUrl ? imageUrl : null,
+      imageUrl: imageData ? imageData : null,
     });
 
     updateCommentsSummary(venueId);
@@ -83,4 +92,66 @@ async function updateCommentsSummary(venueId) {
 
 function commentList(comments) {
   return comments.map((comment) => comment.comment).join(".\n");
+}
+
+async function checkImage(imageUrl: string) {
+  if (!imageUrl) return;
+  try {
+    const prompt =
+      `You will be analyzing an image to determine if it falls into one of three acceptable categories.
+
+    Your task is to determine whether this image shows one of the following three acceptable types:
+
+    1. **Foods** - Any edible items, meals, snacks, ingredients, or food products. This includes prepared dishes, raw ingredients, packaged food items, baked goods, etc.
+
+    2. **Drinks** - Any beverages or liquid refreshments. This includes alcoholic and non-alcoholic drinks, hot and cold beverages, bottled drinks, drinks in glasses or cups, etc.
+
+    3. **Photo of menu** - Images showing restaurant menus, cafe menus, drink menus, food menus, or any printed/digital menu displaying food and/or drink options with descriptions and/or prices.
+
+    When analyzing the image, consider these guidelines:
+
+    - Look carefully at all visible elements in the image
+    - If the image contains multiple elements, determine what the primary focus is
+    - An image showing both food and drinks should be accepted (categorize based on the primary focus)
+    - Menu photos can be physical menus, digital displays, or menu boards
+    - Be inclusive rather than restrictive - if something is clearly edible or drinkable, it should be accepted
+
+    For your response:
+
+    First, describe what you observe in the image and explain your reasoning for whether it fits into one of the acceptable categories.
+
+    Then, provide your final determination using one of these exact phrases:
+    - "ACCEPTED - Food"
+    - "ACCEPTED - Drink"
+    - "ACCEPTED - Menu"
+    - "REJECTED - Does not match acceptable categories"
+
+    Format your response as follows:
+    <analysis>
+    [Your detailed observation and reasoning here]
+    </analysis>
+
+    <determination>
+    [Your final determination using one of the four exact phrases above]
+    </determination>`;
+
+    const config = {
+      "responseMimeType": "application/json",
+      "responseSchema": {
+        type: "OBJECT",
+        properties: {
+          status: { type: "STRING", enum: ["ACCEPTED", "REJECTED"] },
+          type: { type: "STRING", enum: ["FOOD", "DRINK", "MENU"] },
+        },
+      },
+      "thinkingConfig": {
+        "thinkingBudget": 0,
+      },
+    };
+
+    return sendImageAndGenerate(prompt, imageUrl, config);
+  } catch (err) {
+    console.error(err);
+    throw new Error("Invalid image");
+  }
 }
