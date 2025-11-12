@@ -6,12 +6,14 @@ export async function POST({ request }: { request: Request }) {
     const { venueId, userName, comment, sentiment, imageUrl } = await request
       .json();
 
-    const { status, result } = await checkImage(imageUrl);
-    console.log({ status, result });
-    const checkData = JSON.parse(result.text);
     let imageData = null;
-    if (checkData.status === "ACCEPTED") {
-      imageData = imageUrl;
+    if (imageUrl) {
+      const { status, text } = await checkImage(imageUrl);
+      console.log({ status, text });
+      const checkData = JSON.parse(text);
+      if (checkData.status === "ACCEPTED") {
+        imageData = imageUrl;
+      }
     }
 
     if (!venueId || !userName || !comment) {
@@ -79,8 +81,7 @@ async function updateCommentsSummary(venueId) {
     },
   };
   const { status, text } = await generate(prompt, config);
-  console.log(typeof text.text);
-  const { summary, satisfaction } = JSON.parse(text.text);
+  const { summary, satisfaction } = JSON.parse(text);
   console.log({ summary, satisfaction });
 
   await db

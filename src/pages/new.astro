@@ -395,7 +395,7 @@ async function updateVenueTags(venueId: number) {
         const result = await response.json();
 
         if (result.status === "ok") {
-            const parsed = JSON.parse(result.text.text);
+            const parsed = JSON.parse(result.text);
 
             const nameInput = document.querySelector('input[name="name"]');
             const addressInput = document.querySelector(
