@@ -1,0 +1,297 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { db, Venue } from "astro:db";
+
+const venues = await db.select().from(Venue);
+---
+
+<Layout title="Compare Venues - Workspresso">
+    <div class="min-h-screen bg-neutral-50">
+        <div class="bg-neutral-950 text-white p-6 border-b-8 border-amber-500">
+            <div class="mb-4">
+                <a href="/">
+                    <h1 class="text-3xl font-black tracking-tight mb-2">
+                        WORK<span class="text-amber-400">SPRESSO</span>
+                    </h1>
+                </a>
+            </div>
+        </div>
+
+        <div class="p-4">
+            <div
+                class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6"
+            >
+                <h2 class="text-2xl font-black text-neutral-900 mb-4">
+                    Select Two Venues to Compare
+                </h2>
+
+                <form id="compare-form" class="space-y-4">
+                    <div>
+                        <label
+                            for="venueId1"
+                            class="block text-sm font-bold text-neutral-900 mb-2"
+                        >
+                            Venue 1
+                        </label>
+                        <select
+                            id="venueId1"
+                            name="venueId1"
+                            required
+                            class="w-full px-4 py-3 bg-white border-2 border-neutral-900 text-neutral-900 font-mono focus:outline-none focus:border-amber-500"
+                        >
+                            <option value="">Select a venue...</option>
+                            {
+                                venues.map((venue) => (
+                                    <option value={venue.id}>
+                                        {venue.name}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </div>
+
+                    <div>
+                        <label
+                            for="venueId2"
+                            class="block text-sm font-bold text-neutral-900 mb-2"
+                        >
+                            Venue 2
+                        </label>
+                        <select
+                            id="venueId2"
+                            name="venueId2"
+                            required
+                            class="w-full px-4 py-3 bg-white border-2 border-neutral-900 text-neutral-900 font-mono focus:outline-none focus:border-amber-500"
+                        >
+                            <option value="">Select a venue...</option>
+                            {
+                                venues.map((venue) => (
+                                    <option value={venue.id}>
+                                        {venue.name}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="compare-btn"
+                        class="w-full bg-amber-500 text-neutral-900 px-6 py-3 font-black text-lg border-4 border-neutral-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        COMPARE
+                    </button>
+                </form>
+            </div>
+
+            <div id="results" class="mt-6 hidden">
+                <div
+                    id="results-content"
+                    class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+                >
+                    <div
+                        class="h-2 bg-gradient-to-r from-amber-400 to-orange-500"
+                    >
+                    </div>
+                    <div class="p-6" id="results-inner"></div>
+                </div>
+            </div>
+
+            <div id="error" class="mt-6 hidden">
+                <div
+                    class="bg-rose-50 border-4 border-rose-600 shadow-[8px_8px_0px_0px_rgba(225,29,72,1)] p-6"
+                >
+                    <div class="flex items-start">
+                        <div class="w-6 h-6 text-rose-600 mr-3 flex-shrink-0">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <p id="error-message" class="text-rose-900 font-bold">
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading" class="mt-6 hidden">
+                <div
+                    class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6"
+                >
+                    <div class="flex items-center justify-center">
+                        <div
+                            class="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mr-3"
+                        >
+                        </div>
+                        <p class="text-neutral-900 font-bold">
+                            Generating comparison...
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center">
+                <a
+                    href="/"
+                    class="text-sm text-neutral-600 hover:text-neutral-900 font-mono underline"
+                >
+                    ← Back to venues
+                </a>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    const form = document.getElementById("compare-form") as HTMLFormElement;
+    const resultsDiv = document.getElementById("results") as HTMLDivElement;
+    const resultsInner = document.getElementById(
+        "results-inner",
+    ) as HTMLDivElement;
+    const errorDiv = document.getElementById("error") as HTMLDivElement;
+    const errorMessage = document.getElementById(
+        "error-message",
+    ) as HTMLParagraphElement;
+    const loadingDiv = document.getElementById("loading") as HTMLDivElement;
+    const compareBtn = document.getElementById(
+        "compare-btn",
+    ) as HTMLButtonElement;
+    const venueSelect1 = document.getElementById(
+        "venueId1",
+    ) as HTMLSelectElement;
+    const venueSelect2 = document.getElementById(
+        "venueId2",
+    ) as HTMLSelectElement;
+
+    function hideAll() {
+        resultsDiv.classList.add("hidden");
+        errorDiv.classList.add("hidden");
+        loadingDiv.classList.add("hidden");
+    }
+
+    function showError(message: string) {
+        hideAll();
+        errorMessage.textContent = message;
+        errorDiv.classList.remove("hidden");
+    }
+
+    function showLoading() {
+        hideAll();
+        loadingDiv.classList.remove("hidden");
+    }
+
+    function checkSameVenue() {
+        const val1 = venueSelect1.value;
+        const val2 = venueSelect2.value;
+        if (val1 && val2 && val1 === val2) {
+            compareBtn.disabled = true;
+            compareBtn.textContent = "SELECT DIFFERENT VENUES";
+        } else {
+            compareBtn.disabled = false;
+            compareBtn.textContent = "COMPARE";
+        }
+    }
+
+    venueSelect1.addEventListener("change", checkSameVenue);
+    venueSelect2.addEventListener("change", checkSameVenue);
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const venueId1 = formData.get("venueId1");
+        const venueId2 = formData.get("venueId2");
+
+        if (!venueId1 || !venueId2) {
+            showError("Please select both venues.");
+            return;
+        }
+
+        if (venueId1 === venueId2) {
+            showError("Please select two different venues.");
+            return;
+        }
+
+        showLoading();
+
+        try {
+            const response = await fetch("/api/compare", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ venueId1, venueId2 }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || result.error) {
+                showError(result.error || "Failed to generate comparison.");
+                return;
+            }
+
+            hideAll();
+
+            const venue1Html = `
+				<div class="mb-6">
+					<h3 class="text-xl font-black text-neutral-900 mb-3">${escapeHtml(result.venue1.name)}</h3>
+					<div class="mb-3">
+						<h4 class="text-sm font-bold text-emerald-700 mb-2">✓ PROS</h4>
+						<ul class="space-y-1">
+							${result.venue1.pros.map((pro: string) => `<li class="text-sm text-neutral-700 pl-4">• ${escapeHtml(pro)}</li>`).join("")}
+						</ul>
+					</div>
+					<div>
+						<h4 class="text-sm font-bold text-rose-700 mb-2">✗ CONS</h4>
+						<ul class="space-y-1">
+							${result.venue1.cons.map((con: string) => `<li class="text-sm text-neutral-700 pl-4">• ${escapeHtml(con)}</li>`).join("")}
+						</ul>
+					</div>
+				</div>
+			`;
+
+            const venue2Html = `
+				<div class="mb-6">
+					<h3 class="text-xl font-black text-neutral-900 mb-3">${escapeHtml(result.venue2.name)}</h3>
+					<div class="mb-3">
+						<h4 class="text-sm font-bold text-emerald-700 mb-2">✓ PROS</h4>
+						<ul class="space-y-1">
+							${result.venue2.pros.map((pro: string) => `<li class="text-sm text-neutral-700 pl-4">• ${escapeHtml(pro)}</li>`).join("")}
+						</ul>
+					</div>
+					<div>
+						<h4 class="text-sm font-bold text-rose-700 mb-2">✗ CONS</h4>
+						<ul class="space-y-1">
+							${result.venue2.cons.map((con: string) => `<li class="text-sm text-neutral-700 pl-4">• ${escapeHtml(con)}</li>`).join("")}
+						</ul>
+					</div>
+				</div>
+			`;
+
+            const summaryHtml = `
+				<div class="pt-6 border-t-4 border-neutral-200">
+					<h3 class="text-lg font-black text-neutral-900 mb-2">SUMMARY</h3>
+					<p class="text-neutral-700 leading-relaxed">${escapeHtml(result.summary)}</p>
+				</div>
+			`;
+
+            resultsInner.innerHTML = venue1Html + venue2Html + summaryHtml;
+            resultsDiv.classList.remove("hidden");
+        } catch (err) {
+            showError("An unexpected error occurred. Please try again.");
+            console.error("Compare error:", err);
+        }
+    });
+
+    function escapeHtml(text: string): string {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+    }
+</script>
