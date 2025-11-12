@@ -20,7 +20,7 @@ if (Astro.request.method === "POST") {
         console.log(similarity);
         results.push({ ...venue, similarity });
     }
-    results = results.filter((v) => v.similarity > 0.5);
+    results = results.filter((v) => v.similarity > 0.6);
     results.sort((a, b) => b.similarity - a.similarity);
     venues = results;
 }

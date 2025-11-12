@@ -6,7 +6,7 @@ export async function embedText(text: string) {
     "TaylorAI/bge-micro-v2",
   );
   const { data } = await embeddingPipeline(text, {
-    pooling: "mean",
+    pooling: "cls",
     normalize: true,
   });
   return data;
