@@ -1,5 +1,4 @@
 import { pipeline } from "@huggingface/transformers";
-import { inspect } from "util";
 
 type Result = { status: "ok" | "ko"; text?: string; error?: string };
 
@@ -28,7 +27,7 @@ export async function generate(
     });
 
     const { candidates } = await result.json();
-    const text = candidates[0].content.parts[0];
+    const text = candidates?.[0]?.content?.parts?.[0]?.text ?? "";
     return { status: "ok", text };
   } catch (err) {
     return {
@@ -95,8 +94,8 @@ export async function sendImageAndGenerate(
     console.log("ai.ts:93");
     // console.log(inspect(candidates, false, null, true));
 
-    const text = candidates[0].content.parts[0];
-    return { status: "ok", result: text };
+    const text = candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    return { status: "ok", text };
   } catch (err) {
     return {
       status: "ko",
