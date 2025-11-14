@@ -4,6 +4,7 @@ export async function embedText(text: string) {
   const embeddingPipeline = await pipeline(
     "embeddings",
     "TaylorAI/bge-micro-v2",
+    { dtype: "auto" },
   );
   const { data } = await embeddingPipeline(text, {
     pooling: "cls",
