@@ -13,7 +13,7 @@ if (Astro.request.method === "POST") {
     const queryEmbed = await embedText(query);
     let results = [];
     for (const venue of venues) {
-        const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
+        const text = `Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
         console.log(text);
         const venueEmbed = await embedText(text);
         const similarity = cosineSimilarity(queryEmbed, venueEmbed);
