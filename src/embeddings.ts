@@ -1,12 +1,16 @@
 import { pipeline } from "@huggingface/transformers";
 
-export async function embedText(text: string) {
-  const embeddingPipeline = await pipeline(
-    "embeddings",
-    "TaylorAI/bge-micro-v2",
+export async function embedText(
+  text: string,
+  task: "embeddings" | "feature-extraction" = "embeddings",
+  model = "TaylorAI/bge-micro-v2",
+) {
+  const embedding = await pipeline(
+    task,
+    model,
     { dtype: "auto" },
   );
-  const { data } = await embeddingPipeline(text, {
+  const { data } = await embedding(text, {
     pooling: "cls",
     normalize: true,
   });
