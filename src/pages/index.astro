@@ -13,15 +13,14 @@ if (Astro.request.method === "POST") {
     const queryEmbed = await embedText(query);
     let results = [];
     for (const venue of venues) {
-        const text = `Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
-        console.log(text);
+        const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
         const venueEmbed = await embedText(text);
         const similarity = cosineSimilarity(queryEmbed, venueEmbed);
-        console.log(similarity);
         results.push({ ...venue, similarity });
     }
-    results = results.filter((v) => v.similarity > 0.6);
     results.sort((a, b) => b.similarity - a.similarity);
+    results = results.slice(0, 3);
+
     venues = results;
 }
 ---
