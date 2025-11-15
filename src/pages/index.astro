@@ -6,10 +6,11 @@ import { icons } from "../components/icons";
 import { embedText, cosineSimilarity } from "../embeddings.ts";
 
 let venues = await db.select().from(Venue);
+let query = "";
 
 if (Astro.request.method === "POST") {
     const formData = await Astro.request.formData();
-    const query = formData.get("q")?.toString() || "";
+    query = formData.get("q")?.toString() || "";
     const queryEmbed = await embedText(query);
     let results = [];
     for (const venue of venues) {
@@ -63,6 +64,7 @@ if (Astro.request.method === "POST") {
                         type="text"
                         id="search-input"
                         name="q"
+                        value={query}
                         placeholder="Search venues..."
                         class="w-full px-4 py-3 pr-12 bg-neutral-900 border-2 border-amber-500 text-white placeholder-gray-500 font-mono focus:outline-none focus:border-amber-400"
                     />
