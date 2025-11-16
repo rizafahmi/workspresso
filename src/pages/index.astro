@@ -3,7 +3,7 @@ import { db, Venue } from "astro:db";
 import Layout from "../layouts/Layout.astro";
 import { icons } from "../components/icons";
 
-import { embedText, cosineSimilarity } from "../embeddings.ts";
+import { bm25, embedText, cosineSimilarity } from "../embeddings.ts";
 
 let venues = await db.select().from(Venue);
 let query = "";
@@ -11,18 +11,32 @@ let query = "";
 if (Astro.request.method === "POST") {
     const formData = await Astro.request.formData();
     query = formData.get("q")?.toString() || "";
-    const queryEmbed = await embedText(query);
     let results = [];
-    for (const venue of venues) {
-        const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
-        const venueEmbed = await embedText(text);
-        const similarity = cosineSimilarity(queryEmbed, venueEmbed);
-        results.push({ ...venue, similarity });
-    }
-    results.sort((a, b) => b.similarity - a.similarity);
-    results = results.slice(0, 3);
 
-    venues = results;
+    // ⚠️ Basic search combining Name and Description ⚠️
+    results = venues.filter((venue) => {
+        const combinedText = `${venue.name} ${venue.description}`;
+        return combinedText.toLowerCase().includes(query.toLowerCase());
+    });
+
+    // TODO: ⚠️ Use bm25 algorithm for basic semantic search ⚠️
+    // for (const venue of venues) {
+    //     const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
+    //     const similarity = bm25(query, text);
+    //     console.log(similarity);
+    //     results.push({ ...venue, similarity });
+    // }
+
+    // TODO: ⚠️ Use hugging-face model for similarity search ⚠️
+    // const queryEmbed = await embedText(query);
+
+    // for (const venue of venues) {
+    //     const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
+    //     const venueEmbed = await embedText(text);
+    //     const similarity = cosineSimilarity(queryEmbed, venueEmbed);
+    //     results.push({ ...venue, similarity });
+    // }
+    // venues = results.sort((a, b) => b.similarity - a.similarity).slice(0, 3);
 }
 ---
 
