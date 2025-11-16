@@ -6,15 +6,16 @@ export async function POST({ request }: { request: Request }) {
     const { venueId, userName, comment, sentiment, imageUrl } = await request
       .json();
 
-    let imageData = null;
-    if (imageUrl) {
-      const { status, text } = await checkImage(imageUrl);
-      console.log({ status, text });
-      const checkData = JSON.parse(text);
-      if (checkData.status === "ACCEPTED") {
-        imageData = imageUrl;
-      }
-    }
+    let imageData = imageUrl;
+
+    /* TODO: ⚠️ Check image upload to only accept certain image: food, drink and menu. */
+    // if (imageUrl) {
+    //   const { status, text } = await checkImage(imageUrl);
+    //   const checkData = JSON.parse(text);
+    //   if (checkData.status === "ACCEPTED") {
+    //     imageData = imageUrl;
+    //   }
+    // }
 
     if (!venueId || !userName || !comment) {
       return new Response(
@@ -35,7 +36,7 @@ export async function POST({ request }: { request: Request }) {
     });
 
     /* TODO: ⚠️ Summarize comments ⚠️ */
-    updateCommentsSummary(venueId);
+    // updateCommentsSummary(venueId);
 
     return new Response(
       JSON.stringify({ success: true }),
@@ -97,64 +98,65 @@ function commentList(comments) {
   return comments.map((comment) => comment.comment).join(".\n");
 }
 
-async function checkImage(imageUrl: string) {
-  if (!imageUrl) return;
-  try {
-    const prompt =
-      `You will be analyzing an image to determine if it falls into one of three acceptable categories.
+/* TODO: ⚠️ Function check image with gemini multi-modal ⚠️ */
+// async function checkImage(imageUrl: string) {
+//   if (!imageUrl) return;
+//   try {
+//     const prompt =
+//       `You will be analyzing an image to determine if it falls into one of three acceptable categories.
 
-    Your task is to determine whether this image shows one of the following three acceptable types:
+//     Your task is to determine whether this image shows one of the following three acceptable types:
 
-    1. **Foods** - Any edible items, meals, snacks, ingredients, or food products. This includes prepared dishes, raw ingredients, packaged food items, baked goods, etc.
+//     1. **Foods** - Any edible items, meals, snacks, ingredients, or food products. This includes prepared dishes, raw ingredients, packaged food items, baked goods, etc.
 
-    2. **Drinks** - Any beverages or liquid refreshments. This includes alcoholic and non-alcoholic drinks, hot and cold beverages, bottled drinks, drinks in glasses or cups, etc.
+//     2. **Drinks** - Any beverages or liquid refreshments. This includes alcoholic and non-alcoholic drinks, hot and cold beverages, bottled drinks, drinks in glasses or cups, etc.
 
-    3. **Photo of menu** - Images showing restaurant menus, cafe menus, drink menus, food menus, or any printed/digital menu displaying food and/or drink options with descriptions and/or prices.
+//     3. **Photo of menu** - Images showing restaurant menus, cafe menus, drink menus, food menus, or any printed/digital menu displaying food and/or drink options with descriptions and/or prices.
 
-    When analyzing the image, consider these guidelines:
+//     When analyzing the image, consider these guidelines:
 
-    - Look carefully at all visible elements in the image
-    - If the image contains multiple elements, determine what the primary focus is
-    - An image showing both food and drinks should be accepted (categorize based on the primary focus)
-    - Menu photos can be physical menus, digital displays, or menu boards
-    - Be inclusive rather than restrictive - if something is clearly edible or drinkable, it should be accepted
+//     - Look carefully at all visible elements in the image
+//     - If the image contains multiple elements, determine what the primary focus is
+//     - An image showing both food and drinks should be accepted (categorize based on the primary focus)
+//     - Menu photos can be physical menus, digital displays, or menu boards
+//     - Be inclusive rather than restrictive - if something is clearly edible or drinkable, it should be accepted
 
-    For your response:
+//     For your response:
 
-    First, describe what you observe in the image and explain your reasoning for whether it fits into one of the acceptable categories.
+//     First, describe what you observe in the image and explain your reasoning for whether it fits into one of the acceptable categories.
 
-    Then, provide your final determination using one of these exact phrases:
-    - "ACCEPTED - Food"
-    - "ACCEPTED - Drink"
-    - "ACCEPTED - Menu"
-    - "REJECTED - Does not match acceptable categories"
+//     Then, provide your final determination using one of these exact phrases:
+//     - "ACCEPTED - Food"
+//     - "ACCEPTED - Drink"
+//     - "ACCEPTED - Menu"
+//     - "REJECTED - Does not match acceptable categories"
 
-    Format your response as follows:
-    <analysis>
-    [Your detailed observation and reasoning here]
-    </analysis>
+//     Format your response as follows:
+//     <analysis>
+//     [Your detailed observation and reasoning here]
+//     </analysis>
 
-    <determination>
-    [Your final determination using one of the four exact phrases above]
-    </determination>`;
+//     <determination>
+//     [Your final determination using one of the four exact phrases above]
+//     </determination>`;
 
-    const config = {
-      "responseMimeType": "application/json",
-      "responseSchema": {
-        type: "OBJECT",
-        properties: {
-          status: { type: "STRING", enum: ["ACCEPTED", "REJECTED"] },
-          type: { type: "STRING", enum: ["FOOD", "DRINK", "MENU"] },
-        },
-      },
-      "thinkingConfig": {
-        "thinkingBudget": 0,
-      },
-    };
+//     const config = {
+//       "responseMimeType": "application/json",
+//       "responseSchema": {
+//         type: "OBJECT",
+//         properties: {
+//           status: { type: "STRING", enum: ["ACCEPTED", "REJECTED"] },
+//           type: { type: "STRING", enum: ["FOOD", "DRINK", "MENU"] },
+//         },
+//       },
+//       "thinkingConfig": {
+//         "thinkingBudget": 0,
+//       },
+//     };
 
-    return sendImageAndGenerate(prompt, imageUrl, config);
-  } catch (err) {
-    console.error(err);
-    throw new Error("Invalid image");
-  }
-}
+//     return sendImageAndGenerate(prompt, imageUrl, config);
+//   } catch (err) {
+//     console.error(err);
+//     throw new Error("Invalid image");
+//   }
+// }

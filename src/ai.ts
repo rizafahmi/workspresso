@@ -91,7 +91,6 @@ export async function sendImageAndGenerate(
 
     const { candidates } = await result.json();
     console.log("ai.ts:93");
-    // console.log(inspect(candidates, false, null, true));
 
     const text = candidates?.[0]?.content?.parts?.[0]?.text ?? "";
     return { status: "ok", text };
