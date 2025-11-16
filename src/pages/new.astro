@@ -331,12 +331,17 @@ async function updateVenueTags(venueId: number) {
                     By submitting, you're helping remote workers find great
                     places to be productive. Thank you! 🙌
                 </p>
+                <!--
+                TODO: ⚠️ Smart Paste Button ⚠️
+                -->
+                <!--
                 <button
                     id="paste"
                     type="button"
                     class="w-full bg-zinc-200 text-neutral-900 mb-4 py-4 font-black border-4 border-neutral-900 hover:bg-zinc-100 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:text-neutral-500"
                     >SMART PASTE</button
                 >
+                -->
                 <button
                     type="submit"
                     class="w-full bg-amber-500 text-neutral-900 py-4 font-black border-4 border-neutral-900 hover:bg-amber-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
@@ -351,6 +356,8 @@ async function updateVenueTags(venueId: number) {
     </div>
 </Layout>
 <script>
+    /* TODO: ⚠️ Smart Paste Logic ⚠️ */
+    /*
     const pasteButton = document.querySelector("#paste");
     pasteButton.addEventListener("click", async () => {
         pasteButton.disabled = true;
@@ -438,4 +445,5 @@ async function updateVenueTags(venueId: number) {
         }
         pasteButton.disabled = false;
     });
+     */
 </script>
