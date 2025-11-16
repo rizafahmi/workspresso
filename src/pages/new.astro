@@ -38,29 +38,27 @@ if (Astro.request.method === "POST") {
         });
 
         const id = parseInt(result.lastInsertRowid);
-        updateVenueTags(id);
+
+        /* TODO: ⚠️ Add tags based on description ⚠️ */
+        // updateVenueTags(id, description);
+
         return Astro.redirect(`/venue/${id}`);
     } catch (err) {
         console.error(err);
     }
 }
 
-async function updateVenueTags(venueId: number) {
-    console.log(venueId);
-    const venue = await db
-        .select()
-        .from(Venue)
-        .where(eq(Venue.id, Number(venueId)))
-        .get();
-    if (venue && venue.description) {
-        const { labels } = await generateTags(venue.description);
-        const tags = labels.join(",");
-        await db
-            .update(Venue)
-            .set({ tags })
-            .where(eq(Venue.id, Number(venueId)))
-            .run();
-    }
+/* TODO: ⚠️ Generate tags based on description ⚠️ */
+async function updateVenueTags(venueId: number, description: string) {
+    // if (description) {
+    //     const { labels } = await generateTags(description);
+    //     const tags = labels.join(",");
+    //     await db
+    //         .update(Venue)
+    //         .set({ tags })
+    //         .where(eq(Venue.id, Number(venueId)))
+    //         .run();
+    // }
 }
 ---
 

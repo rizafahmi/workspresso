@@ -57,7 +57,6 @@ export async function generateTags(text: string) {
     "Crowded",
   ];
   const result = await classifier(text, candidateLabels);
-  console.log(result);
   return result;
 }
 
