@@ -11,7 +11,7 @@ Name: Omore Coffee, Description: Omore Coffee boasts an aesthetic design and a c
 Name: JK Kopi Seduh, Description: This cafe offers a unique experience with walls covered in striking, colorful graffiti, creating a vibrant atmosphere for local artists' expression. It provides a very comfortable space for gathering and relaxed conversations, with an open view of coffee brewing from strong espresso to soft cappuccino., Known for: Artistic and relaxed with a vibrant, expressive atmosphere., Tags: Cafe,Great Coffee,Good for Work,Crowded,Spacious,Cozy,WFC,Loud,Quiet,Fast WiFi
 Name: Ethikopia Coffeebay, Description: Ethikopia Coffeebay is a comfortable and calm place with an interesting and aesthetic interior design. It is perfect for enjoying coffee and conversation with friends or family., Known for: A comfortable and calm atmosphere with an aesthetic design., Tags: Cafe,Cozy,Quiet,Great Coffee,WFC,Good for Work,Spacious,Crowded,Loud,Fast WiFi
 `;
-const query = "premium coffee";
+const query = "developer"; // premium coffee, traditional, modern, quiet, cozy
 console.log("BM25");
 console.log("================================");
 (function () {
