@@ -19,7 +19,7 @@ if (Astro.request.method === "POST") {
         return combinedText.toLowerCase().includes(query.toLowerCase());
     });
 
-    // TODO: ⚠️ Use bm25 algorithm for basic semantic search ⚠️
+    // FEAT 2: ⚠️ Use bm25 algorithm for basic semantic search ⚠️
     // for (const venue of venues) {
     //     const text = `Name: ${venue.name}, Description: ${venue.description}, Known for: ${venue.vibe}, Tags: ${venue.tags}`;
     //     const similarity = bm25(query, text);
@@ -28,7 +28,7 @@ if (Astro.request.method === "POST") {
     // }
     // venues = results.sort((a, b) => b.similarity - a.similarity).slice(0, 3);
 
-    // TODO: ⚠️ Use hugging-face model for similarity search ⚠️
+    // FEAT 2: ⚠️ Use hugging-face model for similarity search ⚠️
     // const queryEmbed = await embedText(query);
 
     // for (const venue of venues) {
