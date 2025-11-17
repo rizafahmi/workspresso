@@ -11,6 +11,7 @@
     # pkgs.python311Packages.pip
     # pkgs.nodejs_20
     # pkgs.nodePackages.nodemon
+    pkgs.bun
   ];
 
   # Sets environment variables in the workspace
@@ -26,7 +27,7 @@
       previews = {
         web = {
           command =
-            [ "npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0" ];
+            [ "bun" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0" ];
           manager = "web";
         };
       };
@@ -55,12 +56,12 @@
       # Runs when a workspace is first created
       onCreate = {
         # Example: install JS dependencies from NPM
-        npm-install = "npm install";
+        npm-install = "bun install";
       };
       # Runs when the workspace is (re)started
       onStart = {
         # Example: start a background task to watch and re-build backend code
-        watch-backend = "npm run dev";
+        watch-backend = "bun run dev";
       };
     };
   };
