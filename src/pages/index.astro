@@ -26,6 +26,7 @@ if (Astro.request.method === "POST") {
     //     console.log(similarity);
     //     results.push({ ...venue, similarity });
     // }
+    // venues = results.sort((a, b) => b.similarity - a.similarity).slice(0, 3);
 
     // TODO: ⚠️ Use hugging-face model for similarity search ⚠️
     // const queryEmbed = await embedText(query);
