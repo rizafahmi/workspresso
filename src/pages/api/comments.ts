@@ -6,7 +6,7 @@ export async function POST({ request }: { request: Request }) {
     const { venueId, userName, comment, sentiment, imageUrl } = await request
       .json();
 
-    let imageData = imageUrl;
+    let imageData = imageUrl; // Change to null when enable image classification
 
     /* TODO: ⚠️ Check image upload to only accept certain image: food, drink and menu. */
     // if (imageUrl) {
