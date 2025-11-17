@@ -14,10 +14,10 @@ if (Astro.request.method === "POST") {
     let results = [];
 
     // ⚠️ Basic search combining Name and Description ⚠️
-    results = venues.filter((venue) => {
+    venues = venues.filter((venue) => {
         const combinedText = `${venue.name} ${venue.description}`;
         return combinedText.toLowerCase().includes(query.toLowerCase());
-    });
+    }).slice(0, 3);
 
     // FEAT 2: ⚠️ Use bm25 algorithm for basic semantic search ⚠️
     // for (const venue of venues) {
