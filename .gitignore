@@ -23,7 +23,11 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-docs/
 .repoprompt/
 playwright-report/
 test-results/
+docs/PRD.txt
+docs/features/venue_comparison_spec.md
+docs/features/venue_comparison_user_story.md
+docs/advanced-search-spec.md
+docs/mockup.jsx
