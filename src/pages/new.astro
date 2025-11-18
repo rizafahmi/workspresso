@@ -80,14 +80,27 @@ async function updateVenueTags(venueId: number, description: string) {
             </p>
         </div>
 
+        <dialog id="exampleModal" class="">
+            <div class="modal-box bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+                <textarea name="venue-example" rows="8" class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-gray-700" onfocus="this.select()">Fisherman's Cafe. An awesome place near the sea. Popeyes hangout here often. Even though the wifi connection is bad, the vibe is great!</textarea>
+            </div>
+            <form method="dialog" class="flex justify-center">
+                <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
+                    Close
+                </button>
+            </form>
+        </dialog>
         <form method="POST" class="p-4 space-y-4">
             <!-- Basic Info Card -->
             <div
                 class="bg-white border-4 border-neutral-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden"
             >
-                <div class="bg-neutral-900 text-white px-4 py-3">
+                <div class="bg-neutral-900 text-white px-4 py-3 flex items-center gap-x-2">
                     <h2 class="font-black text-sm">BASIC INFORMATION</h2>
+                    <button id="show-example" type="button" onclick="exampleModal.showModal()">?</button>
+
                 </div>
+
                 <div class="p-5 space-y-4">
                     <div>
                         <label
