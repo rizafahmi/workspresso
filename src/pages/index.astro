@@ -5,6 +5,11 @@ import { icons } from "../components/icons";
 
 import { bm25, embedText, cosineSimilarity } from "../embeddings.ts";
 
+// FEAT 0: ⚠️ Access Gemini AI ⚠️
+// import { generate } from "../ai.ts";
+
+// console.log(await generate("What is the meaning of life?", {}))
+
 let venues = await db.select().from(Venue);
 let query = "";
 
