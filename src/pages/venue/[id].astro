@@ -386,7 +386,7 @@ const comments = await db
 </Layout>
 
 <script>
-    // ⚠️ TODO: Headstart Gemini Nano ⚠️
+    // FEAT 3: ⚠️ Headstart Gemini Nano ⚠️
     // Upgrade to Chrome Dev / Canary version 127 or higher.
     // Make sure to enable Gemini Nano in Chrome flags:
     // chrome://flags/#prompt-api-for-gemini-nano to "Enabled"
@@ -415,7 +415,7 @@ const comments = await db
         const venueId = window.location.pathname.split("/").pop();
 
         let sentiment = "";
-        // TODO: ⚠️ Analyze sentiment using Chrome's build in gemini nano ⚠️
+        // FEAT 3: ⚠️ Analyze sentiment using Chrome's build in gemini nano ⚠️
         // sentiment = (await analyzeSentiment(session, comment)) as string;
 
         let imageUrl = null;
@@ -462,14 +462,15 @@ const comments = await db
         }
     });
 
-    async function analyzeSentiment(session, comment) {
-        const result = await session.prompt(`User: ${comment.trim()}`);
-        console.log(result);
+    // FEAT 3: ⚠️ Start analyze ⚠️
+    // async function analyzeSentiment(session, comment) {
+    //     const result = await session.prompt(`User: ${comment.trim()}`);
+    //     console.log(result);
 
-        return result;
-    }
+    //     return result;
+    // }
 
-    // TODO: ⚠️ Start Gemini Nano Session ⚠️
+    // FEAT 3: ⚠️ Start Gemini Nano Session ⚠️
     // async function startAISession() {
     //     const session = await LanguageModel.create({
     //         initialPrompts: [
