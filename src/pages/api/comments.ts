@@ -35,7 +35,7 @@ export async function POST({ request }: { request: Request }) {
       imageUrl: imageData ? imageData : null,
     });
 
-    /* TODO: ⚠️ Summarize comments ⚠️ */
+    /* FEAT 5: ⚠️ Summarize comments ⚠️ */
     // updateCommentsSummary(venueId);
 
     return new Response(
@@ -57,7 +57,7 @@ export async function POST({ request }: { request: Request }) {
   }
 }
 
-/* TODO: ⚠️ Summarize comments function ⚠️ */
+/* FEAT 5: ⚠️ Summarize comments function ⚠️ */
 // async function updateCommentsSummary(venueId) {
 //   const comments = await db.select().from(Comment).where(
 //     eq(Comment.venueId, Number(venueId)),
