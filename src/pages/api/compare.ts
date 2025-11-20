@@ -22,7 +22,7 @@ export async function POST({ request }: { request: Request }) {
 			);
 		}
 
-		/* TODO: ⚠️ RAG - Retrieve venue data ⚠️ */
+		/* FEAT 7: ⚠️ RAG - Retrieve venue data ⚠️ */
 		// const [venue1] = await db
 		// 	.select()
 		// 	.from(Venue)
@@ -42,7 +42,7 @@ export async function POST({ request }: { request: Request }) {
 
 		// const fmt = (value: string | null | undefined) => value ?? "N/A";
 
-		/* TODO: ⚠️ RAG - Augment & Generation ⚠️ */
+		/* FEAT 7: ⚠️ RAG - Augment & Generation ⚠️ */
 // 		const prompt = `Compare the following two venues for remote work and return the result as JSON:
 
 // Venue 1:
