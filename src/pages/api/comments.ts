@@ -6,9 +6,9 @@ export async function POST({ request }: { request: Request }) {
     const { venueId, userName, comment, sentiment, imageUrl } = await request
       .json();
 
-    let imageData = imageUrl; // Change to null when enable image classification
+    let imageData = null; // Change to null when enable image classification
 
-    /* TODO: ⚠️ Check image upload to only accept certain image: food, drink and menu. */
+    /* FEAT 6: ⚠️ Check image upload to only accept certain image: food, drink and menu. */
     // if (imageUrl) {
     //   const { status, text } = await checkImage(imageUrl);
     //   const checkData = JSON.parse(text);
@@ -98,7 +98,7 @@ function commentList(comments) {
   return comments.map((comment) => comment.comment).join(".\n");
 }
 
-/* TODO: ⚠️ Function check image with gemini multi-modal ⚠️ */
+/* FEAT 6: ⚠️ Function check image with gemini multi-modal ⚠️ */
 // async function checkImage(imageUrl: string) {
 //   if (!imageUrl) return;
 //   try {
