@@ -39,7 +39,7 @@ if (Astro.request.method === "POST") {
 
         const id = parseInt(result.lastInsertRowid);
 
-        /* TODO: ⚠️ Add tags based on description ⚠️ */
+        /* FEAT 4: ⚠️ Add tags based on description ⚠️ */
         // updateVenueTags(id, description);
 
         return Astro.redirect(`/venue/${id}`);
@@ -48,18 +48,18 @@ if (Astro.request.method === "POST") {
     }
 }
 
-/* TODO: ⚠️ Generate tags based on description ⚠️ */
-async function updateVenueTags(venueId: number, description: string) {
-    // if (description) {
-    //     const { labels } = await generateTags(description);
-    //     const tags = labels.join(",");
-    //     await db
-    //         .update(Venue)
-    //         .set({ tags })
-    //         .where(eq(Venue.id, Number(venueId)))
-    //         .run();
-    // }
-}
+/* FEAT 4: ⚠️ Generate tags based on description ⚠️ */
+// async function updateVenueTags(venueId: number, description: string) {
+//     if (description) {
+//         const { labels } = await generateTags(description);
+//         const tags = labels.join(",");
+//         await db
+//             .update(Venue)
+//             .set({ tags })
+//             .where(eq(Venue.id, Number(venueId)))
+//             .run();
+//     }
+// }
 ---
 
 <Layout title="Workspresso - Add New Venue">
@@ -345,14 +345,12 @@ async function updateVenueTags(venueId: number, description: string) {
                 <!--
                 FEAT 1: ⚠️ Smart Paste Button ⚠️
                 -->
-                <!--
-                <button
+                <!-- <button
                     id="paste"
                     type="button"
                     class="w-full bg-zinc-200 text-neutral-900 mb-4 py-4 font-black border-4 border-neutral-900 hover:bg-zinc-100 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:text-neutral-500"
                     >SMART PASTE</button
-                >
-                -->
+                > -->
                 <button
                     type="submit"
                     class="w-full bg-amber-500 text-neutral-900 py-4 font-black border-4 border-neutral-900 hover:bg-amber-400 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1"
@@ -368,93 +366,93 @@ async function updateVenueTags(venueId: number, description: string) {
 </Layout>
 <script>
     /* FEAT 1: ⚠️ Smart Paste Logic ⚠️ */
-    /*
-    const pasteButton = document.querySelector("#paste");
-    pasteButton.addEventListener("click", async () => {
-        pasteButton.disabled = true;
-        const text = await navigator.clipboard.readText();
 
-        const response = await fetch("/api/generate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                prompt: `Your purpose is to categorize and extract unstructured data about cafes from user input. Do not add any additional information or explanations. If no information is available for a field, you decide what to fill based on the text given. Field hours use this format: 07:00 - 22:00. Use short sentence to describe vibe field. For description field, write 1-2 sentences about workspace amenities, atmosphere, and unique features. For tags field, generate comma-separated keywords (no spaces after commas) related to the venue's amenities and characteristics. Choose color based on vibe, one of "emerald", "amber", "violet", or "orange". Then you grade based on the data, either 'A', 'B', 'C', or 'D'. Use English for all responses.
+    // const pasteButton = document.querySelector("#paste");
+    // pasteButton.addEventListener("click", async () => {
+    //     pasteButton.disabled = true;
+    //     const text = await navigator.clipboard.readText();
 
-      Classify the following data:
-      <user_data>
-      ${text}
-      </user_data>`,
-                config: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            name: { type: "STRING" },
-                            description: { type: "STRING" },
-                            tags: { type: "STRING" },
-                            address: { type: "STRING" },
-                            hours: { type: "STRING" },
-                            wifiScore: { type: "INTEGER" },
-                            powerScore: { type: "INTEGER" },
-                            noiseScore: { type: "INTEGER" },
-                            seatingScore: { type: "INTEGER" },
-                            vibe: { type: "STRING" },
-                            color: { type: "STRING" },
-                            url: { type: "STRING" },
-                            grade: { type: "STRING" },
-                        },
-                    },
-                },
-            }),
-        });
+    //     const response = await fetch("/api/generate", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //             prompt: `Your purpose is to categorize and extract unstructured data about cafes from user input. Do not add any additional information or explanations. If no information is available for a field, you decide what to fill based on the text given. Field hours use this format: 07:00 - 22:00. Use short sentence to describe vibe field. For description field, write 1-2 sentences about workspace amenities, atmosphere, and unique features. For tags field, generate comma-separated keywords (no spaces after commas) related to the venue's amenities and characteristics. Choose color based on vibe, one of "emerald", "amber", "violet", or "orange". Then you grade based on the data, either 'A', 'B', 'C', or 'D'. Use English for all responses.
 
-        const result = await response.json();
+    //   Classify the following data:
+    //   <user_data>
+    //   ${text}
+    //   </user_data>`,
+    //             config: {
+    //                 responseMimeType: "application/json",
+    //                 responseSchema: {
+    //                     type: "OBJECT",
+    //                     properties: {
+    //                         name: { type: "STRING" },
+    //                         description: { type: "STRING" },
+    //                         tags: { type: "STRING" },
+    //                         address: { type: "STRING" },
+    //                         hours: { type: "STRING" },
+    //                         wifiScore: { type: "INTEGER" },
+    //                         powerScore: { type: "INTEGER" },
+    //                         noiseScore: { type: "INTEGER" },
+    //                         seatingScore: { type: "INTEGER" },
+    //                         vibe: { type: "STRING" },
+    //                         color: { type: "STRING" },
+    //                         url: { type: "STRING" },
+    //                         grade: { type: "STRING" },
+    //                     },
+    //                 },
+    //             },
+    //         }),
+    //     });
 
-        if (result.status === "ok") {
-            const parsed = JSON.parse(result.text);
+    //     const result = await response.json();
 
-            const nameInput = document.querySelector('input[name="name"]');
-            const addressInput = document.querySelector(
-                'input[name="address"]',
-            );
-            const hoursInput = document.querySelector('input[name="hours"]');
-            const colorInput = document.querySelector('input[name="color"]');
-            const vibeInput = document.querySelector('input[name="vibe"]');
-            const gradeInput = document.querySelector('input[name="grade"]');
+    //     if (result.status === "ok") {
+    //         const parsed = JSON.parse(result.text);
 
-            const wifiScoreRange = document.querySelector(
-                'input[name="wifiScore"]',
-            );
-            const powerScoreRange = document.querySelector(
-                'input[name="powerScore"]',
-            );
-            const noiseScoreRange = document.querySelector(
-                'input[name="noiseScore"]',
-            );
-            const seatingScoreRange = document.querySelector(
-                'input[name="seatingScore"]',
-            );
-            const descriptionInput = document.querySelector(
-                'textarea[name="description"]',
-            );
-            const tagsInput = document.querySelector('input[name="tags"]');
+    //         const nameInput = document.querySelector('input[name="name"]');
+    //         const addressInput = document.querySelector(
+    //             'input[name="address"]',
+    //         );
+    //         const hoursInput = document.querySelector('input[name="hours"]');
+    //         const colorInput = document.querySelector('input[name="color"]');
+    //         const vibeInput = document.querySelector('input[name="vibe"]');
+    //         const gradeInput = document.querySelector('input[name="grade"]');
 
-            nameInput.value = parsed.name || "";
-            addressInput.value = parsed.address || "";
-            descriptionInput.value = parsed.description || "";
-            tagsInput.value = parsed.tags || "";
-            hoursInput.value = parsed.hours || "";
-            colorInput.value = parsed.color || "";
-            vibeInput.value = parsed.vibe || "";
-            gradeInput.value = parsed.grade || "D";
-            wifiScoreRange.value = parsed.wifiScore || "3";
-            powerScoreRange.value = parsed.powerScore || "3";
-            noiseScoreRange.value = parsed.noiseScore || "3";
-            seatingScoreRange.value = parsed.seatingScore || "3";
-        }
-        pasteButton.disabled = false;
-    });
-     */
+    //         const wifiScoreRange = document.querySelector(
+    //             'input[name="wifiScore"]',
+    //         );
+    //         const powerScoreRange = document.querySelector(
+    //             'input[name="powerScore"]',
+    //         );
+    //         const noiseScoreRange = document.querySelector(
+    //             'input[name="noiseScore"]',
+    //         );
+    //         const seatingScoreRange = document.querySelector(
+    //             'input[name="seatingScore"]',
+    //         );
+    //         const descriptionInput = document.querySelector(
+    //             'textarea[name="description"]',
+    //         );
+    //         const tagsInput = document.querySelector('input[name="tags"]');
+
+    //         nameInput.value = parsed.name || "";
+    //         addressInput.value = parsed.address || "";
+    //         descriptionInput.value = parsed.description || "";
+    //         tagsInput.value = parsed.tags || "";
+    //         hoursInput.value = parsed.hours || "";
+    //         colorInput.value = parsed.color || "";
+    //         vibeInput.value = parsed.vibe || "";
+    //         gradeInput.value = parsed.grade || "D";
+    //         wifiScoreRange.value = parsed.wifiScore || "3";
+    //         powerScoreRange.value = parsed.powerScore || "3";
+    //         noiseScoreRange.value = parsed.noiseScore || "3";
+    //         seatingScoreRange.value = parsed.seatingScore || "3";
+    //     }
+    //     pasteButton.disabled = false;
+    // });
+
 </script>
