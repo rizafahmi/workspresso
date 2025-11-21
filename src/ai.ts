@@ -2,12 +2,14 @@ import { pipeline } from "@huggingface/transformers";
 
 type Result = { status: "ok" | "ko"; text?: string; error?: string };
 
+const MODEL = "gemini-flash-latest"
+
 export async function generate(
   prompt: string,
   config: Record<string, unknown> = {},
 ): Promise<Result> {
   const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
   try {
     const result = await fetch(url, {
@@ -66,7 +68,7 @@ export async function sendImageAndGenerate(
   config: Record<string, unknown> = {},
 ): Promise<Result> {
   const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
   const { mime, image } = getImageData(imageData);
   const contents = {
