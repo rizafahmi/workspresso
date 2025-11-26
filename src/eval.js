@@ -11,7 +11,7 @@ Name: Omore Coffee, Description: Omore Coffee boasts an aesthetic design and a c
 Name: JK Kopi Seduh, Description: This cafe offers a unique experience with walls covered in striking, colorful graffiti, creating a vibrant atmosphere for local artists' expression. It provides a very comfortable space for gathering and relaxed conversations, with an open view of coffee brewing from strong espresso to soft cappuccino., Known for: Artistic and relaxed with a vibrant, expressive atmosphere., Tags: Cafe,Great Coffee,Good for Work,Crowded,Spacious,Cozy,WFC,Loud,Quiet,Fast WiFi
 Name: Ethikopia Coffeebay, Description: Ethikopia Coffeebay is a comfortable and calm place with an interesting and aesthetic interior design. It is perfect for enjoying coffee and conversation with friends or family., Known for: A comfortable and calm atmosphere with an aesthetic design., Tags: Cafe,Cozy,Quiet,Great Coffee,WFC,Good for Work,Spacious,Crowded,Loud,Fast WiFi
 `;
-const query = "developer"; // premium coffee, traditional, modern, quiet, cozy
+const query = "modern"; // premium coffee, traditional, modern, quiet, cozy
 console.log("BM25");
 console.log("================================");
 (function () {
@@ -21,9 +21,14 @@ console.log("================================");
     .filter((line) => line.trim().length > 0);
   console.log(`Query: ${query}`);
   console.time("BM25 Execution Time");
+  const results = [];
   for (const sentence of sentences) {
     const relevancy = bm25(sentence, query);
     const report = sentence.split(", ")[0];
+    results.push({ report, relevancy });
+  }
+  results.sort((a, b) => b.relevancy - a.relevancy);
+  for (const { report, relevancy } of results) {
     console.log(`${report} - Score: ${relevancy}`);
   }
   console.timeEnd("BM25 Execution Time");
@@ -41,12 +46,18 @@ async function evalBge() {
   console.time("BGE Execution Time");
   const queryEmbed = await embedText(query);
 
+  const results = [];
   for (const text of texts) {
     const venueEmbed = await embedText(text);
     const score = cosineSimilarity(queryEmbed, venueEmbed);
     const relevancy = Math.round(score * 100) / 100;
     const report = text.split(", ")[0];
 
+    results.push({ report, relevancy });
+  }
+
+  results.sort((a, b) => b.relevancy - a.relevancy);
+  for (const { report, relevancy } of results) {
     console.log(`${report} - Score: ${relevancy}`);
   }
   console.timeEnd("BGE Execution Time");
@@ -69,6 +80,7 @@ async function evalMiniLM() {
     "sentence-transformers/all-MiniLM-L6-v2",
   );
 
+  const results = [];
   for (const text of texts) {
     const venueEmbed = await embedText(
       text,
@@ -79,6 +91,10 @@ async function evalMiniLM() {
     const relevancy = Math.round(score * 100) / 100;
     const report = text.split(", ")[0];
 
+    results.push({ report, relevancy });
+  }
+  results.sort((a, b) => b.relevancy - a.relevancy);
+  for (const { report, relevancy } of results) {
     console.log(`${report} - Score: ${relevancy}`);
   }
   console.timeEnd("MiniLM Execution Time");
