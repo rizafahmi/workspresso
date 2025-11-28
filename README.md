@@ -2,7 +2,7 @@
 
 Workspresso is your trusted companion for finding the perfect coffee shop to work from. Designed to eliminate uncertainty and wasted time, Workspresso provides meticulously curated, work-specific data about venues, including Wi-Fi reliability, power outlet availability, noise levels, and more. Whether you're a freelancer, remote employee, or student, Workspresso helps you discover reliable, comfortable environments to be productive.
 
-Built with [Astro](https://astro.build) and SQLite3.
+Built with [Astro](https://astro.build) and SQLite3. This app is a showcase on how to integrate various AI features into existing web apps. Google Cloud credits are provided for this project. #AISprint
 
 ## 🛠️ Getting Started
 
