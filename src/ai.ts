@@ -2,7 +2,7 @@ import { pipeline } from "@huggingface/transformers";
 
 type Result = { status: "ok" | "ko"; text?: string; error?: string };
 
-const MODEL = "gemini-flash-latest"
+const MODEL = "gemini-flash-latest";
 
 export async function generate(
   prompt: string,
@@ -28,8 +28,15 @@ export async function generate(
       }),
     });
 
-    const { candidates } = await result.json();
-    const text = candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    if (!result.ok) {
+      throw new Error(`API Error: ${result.status} ${result.statusText}`);
+    }
+
+    const data = await result.json();
+    if (!data.candidates || data.candidates.length === 0) {
+      throw new Error("No response from model");
+    }
+    const text = data.candidates[0].content?.parts?.[0]?.text ?? "";
     return { status: "ok", text };
   } catch (err) {
     return {
