@@ -369,6 +369,8 @@ if (Astro.request.method === "POST") {
 
     // const pasteButton = document.querySelector("#paste");
     // pasteButton.addEventListener("click", async () => {
+    //     pasteButton.textContent = "Processing...";
+    //     pasteButton.classList.add("opacity-50");
     //     pasteButton.disabled = true;
     //     const text = await navigator.clipboard.readText();
 
@@ -452,6 +454,9 @@ if (Astro.request.method === "POST") {
     //         noiseScoreRange.value = parsed.noiseScore || "3";
     //         seatingScoreRange.value = parsed.seatingScore || "3";
     //     }
+
+    //     pasteButton.textContent = "SMART PASTE";
+    //     pasteButton.classList.remove("opacity-50");
     //     pasteButton.disabled = false;
     // });
 
